@@ -1,0 +1,34 @@
+.scheduleFormContainer {
+    width: fit-content;
+    margin-top: 2.4rem;
+}
+
+.scheduleFormPanel {
+    display: flex;
+    width: fit-content;
+}
+
+.scheduleFormPanelItem {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    margin: auto 5px;
+}
+
+.scheduleFormBtn {
+    color: #b3b3b3b6;
+    font-size: $l-size;
+    width: $xxl-size;
+    height: $xxl-size;
+    margin-top: $s-size;
+}
+  
+.scheduleFormFooter {
+    display: flex;
+    justify-content: flex-end;
+    margin: $s-size 0.5rem;
+}
+
+.scheduleFormFooter Button {
+    margin-left: $s-size;
+}

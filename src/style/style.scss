@@ -1,0 +1,26 @@
+@import './base/_settings';
+@import './base/_base';
+@import './components/_header.scss';
+@import './components/_scheduleForm.scss';
+@import './components/_schedule';
+@import './components/_login.scss';
+
+.container {
+  margin: 20px 20px 20px 10px;
+  border-top: solid 5px;
+  border-image: linear-gradient(90deg, rgba(18, 174, 201, 0.829), rgba(149, 120, 255, 0.836)) 10;
+}
+
+.setBorder {
+  border: solid;
+}
+
+.footer {
+  text-align: center;
+  font-size: 1rem;
+}
+
+.staffList__btn {
+  display: flex;
+  justify-content: space-around;
+}
