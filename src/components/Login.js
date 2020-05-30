@@ -7,7 +7,7 @@ import { Panel } from 'rsuite';
 
 class Login extends React.Component {
   componentDidMount() {
-    this.props.getToken()
+    this.props.fetchToken()
   }
   render() {
     return (

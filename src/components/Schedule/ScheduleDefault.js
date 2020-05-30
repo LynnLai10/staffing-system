@@ -5,7 +5,7 @@ const ScheduleDeafult = () => {
     return (
         <div>
             <PanelNav activeKey={'default'} /> 
-            <ScheduleForm />
+            <ScheduleForm isDefault={true}/>
         </div>
     )
 }

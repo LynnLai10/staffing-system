@@ -4,10 +4,10 @@ import { Nav } from 'rsuite'
 const CustomNav = ({ active, onSelect, ...props }) => {
   return (
     <Nav {...props} activeKey={active} onSelect={onSelect}>
-      <Nav.Item eventKey="next" href="/schedule/next">
+      <Nav.Item eventKey="next" href="/dashboard/schedule/next">
         <h5>Next Schedule</h5>
       </Nav.Item>
-      <Nav.Item eventKey="default" href="/schedule/default">
+      <Nav.Item eventKey="default" href="/dashboard/schedule/default">
         <h5>Default Setting</h5>
       </Nav.Item>
     </Nav>

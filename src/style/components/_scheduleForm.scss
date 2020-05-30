@@ -1,34 +1,46 @@
-.scheduleFormContainer {
+.scheduleForm__container {
     width: fit-content;
     margin-top: 2.4rem;
 }
 
-.scheduleFormPanel {
-    display: flex;
-    width: fit-content;
+.scheduleForm__panel {
+    // display: flex;
+    // justify-content: center;
+    width: 64.5rem;
+    margin: 1rem;
 }
 
-.scheduleFormPanelItem {
-    text-align: center;
+.scheduleForm__panelTitle {
     display: flex;
-    flex-direction: column;
     margin: auto 5px;
 }
 
-.scheduleFormBtn {
+.scheduleForm__panelTitle h5 {
+    display: inline-block;
+    width: $xxl-size;
+    text-align: center;
+    margin: auto 0.5rem;
+}
+
+.scheduleForm__panelItem {
+    margin: auto 5px;
+    flex-wrap: wrap;
+}
+
+.scheduleForm__btn {
     color: #b3b3b3b6;
     font-size: $l-size;
     width: $xxl-size;
     height: $xxl-size;
-    margin-top: $s-size;
+    margin: 0.8rem 0.5rem;
 }
   
-.scheduleFormFooter {
+.scheduleForm__footer {
     display: flex;
     justify-content: flex-end;
-    margin: $s-size 0.5rem;
+    margin: $s-size 2.5rem;
 }
 
-.scheduleFormFooter Button {
+.scheduleForm__footer Button {
     margin-left: $s-size;
 }

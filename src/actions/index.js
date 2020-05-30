@@ -2,25 +2,26 @@ import client from "../utils/getClient";
 import history from "../history";
 import { gql } from "apollo-boost";
 import {
-  GET_USER,
-  GET_AUTH,
+  FETCH_USER,
+  FETCH_AUTH,
   LOGOUT,
   CREATE_USER,
-  GET_USERS,
+  FETCH_USERS,
   UPDATE_USER,
   DELETE_USER,
+  RESET_AVAILABILITY
 } from "./types";
 
 export const getToken = () => async (dispatch) => {
   const token = JSON.parse(localStorage.getItem("EG-token"));
   if (token) {
-    dispatch({ type: GET_AUTH, payload: token });
+    dispatch({ type: FETCH_AUTH, payload: token });
     history.push("/dashboard");
   }
 };
 
 export const login = ({ employeeId, password }) => async (dispatch) => {
-  const auth = gql`
+  const schema = gql`
     mutation {
       login (
         data: {
@@ -35,10 +36,10 @@ export const login = ({ employeeId, password }) => async (dispatch) => {
       }
     }
   `;
-  const res = await client(null).mutate({ mutation: auth });
+  const res = await client(null).mutate({ mutation: schema });
   const token = res.data.login.token;
   localStorage.setItem("EG-token", JSON.stringify(token));
-  dispatch({ type: GET_AUTH, payload: token });
+  dispatch({ type: FETCH_AUTH, payload: token });
   history.push("/dashboard");
 };
 
@@ -48,9 +49,9 @@ export const logout = (dispatch) => {
   history.push("/");
 };
 
-export const getUser = () => async (dispatch) => {
+export const fetchUser = () => async (dispatch) => {
   const token = JSON.parse(localStorage.getItem("EG-token"));
-  const getBio = gql`
+  const schema = gql`
     query {
       me {
         id
@@ -58,17 +59,18 @@ export const getUser = () => async (dispatch) => {
         employeeId
         accountType
         sex
+        availability_next
+        availability_default
       }
     }
   `;
-  const res = await client(token).query({ query: getBio });
-  console.log(res.data);
-  dispatch({ type: GET_USER, payload: res.data.me });
+  const res = await client(token).query({ query: schema });
+  dispatch({ type: FETCH_USER, payload: res.data.me });
 };
 
 export const createUser = (formValue) => async (dispatch) => {
   const { employeeId, name, sex, password, accountType } = formValue;
-  const newUser = gql`
+  const schema = gql`
     mutation {
       createUser (
         auth: "Eg80949597"
@@ -89,14 +91,14 @@ export const createUser = (formValue) => async (dispatch) => {
       }
     }
   `;
-  const res = await client(null).mutate({ mutation: newUser });
+  const res = await client(null).mutate({ mutation: schema });
   const data = JSON.stringify(res.data.createUser.user);
   dispatch({ type: CREATE_USER, payload: JSON.parse(data) });
 };
 
-export const getUsers = () => async (dispatch) => {
+export const fetchUsers = () => async (dispatch) => {
   const token = JSON.parse(localStorage.getItem("EG-token"));
-  const users = gql`
+  const schema = gql`
     query {
       users(orderBy: employeeId_ASC) {
         employeeId
@@ -106,14 +108,14 @@ export const getUsers = () => async (dispatch) => {
       }
     }
   `;
-  const res = await client(token).query({ query: users });
-  dispatch({ type: GET_USERS, payload: res.data.users });
+  const res = await client(token).query({ query: schema });
+  dispatch({ type: FETCH_USERS, payload: res.data.users });
 };
 
 export const updateUser = (oldEmployeeId, formValue) => async (dispatch) => {
   const token = JSON.parse(localStorage.getItem("EG-token"));
   const { employeeId, name, sex, accountType } = formValue;
-  const user = gql`
+  const schema = gql`
     mutation {
       updateUser (
         employeeId: "${oldEmployeeId}"
@@ -125,20 +127,16 @@ export const updateUser = (oldEmployeeId, formValue) => async (dispatch) => {
         }
       ) {
           employeeId
-          name
-          sex
-          accountType
       }
     }
   `;
-  const res = await client(token).mutate({ mutation: user });
+  const res = await client(token).mutate({ mutation: schema });
   const data = JSON.stringify(res.data.updateUser);
   dispatch({ type: UPDATE_USER, payload: JSON.parse(data) });
-
 };
 
 export const deleteUser = (employeeId) => async (dispatch) => {
-  const user = gql`
+  const schema = gql`
     mutation {
       deleteUser (
         employeeId: "${employeeId}"
@@ -147,13 +145,13 @@ export const deleteUser = (employeeId) => async (dispatch) => {
       }
     } 
   `;
-  await client(null).mutate({ mutation: user });
+  await client(null).mutate({ mutation: schema });
   dispatch({ type: DELETE_USER, payload: employeeId });
 };
 
 export const resetPassword = (employeeId) => async (dispatch) => {
   const token = JSON.parse(localStorage.getItem("EG-token"));
-  const user = gql`
+  const schema = gql`
     mutation {
       updateUser (
         employeeId: "${employeeId}"
@@ -165,5 +163,50 @@ export const resetPassword = (employeeId) => async (dispatch) => {
     } 
   }
   `;
-  await client(token).mutate({ mutation: user });
+  await client(token).mutate({ mutation: schema });
+};
+
+export const saveAvailability = (isDefault, employeeId, availability) => async (
+  dispatch
+) => {
+  const token = JSON.parse(localStorage.getItem("EG-token"));
+  const schema = gql`
+    mutation {
+      updateUser (
+        employeeId: "${employeeId}"
+        data: {
+          ${
+            isDefault ? "availability_default" : "availability_next"
+          }: "${JSON.stringify(availability)}"
+        }
+      ){
+        employeeId
+      }
+    }
+  `;
+  await client(token).mutate({ mutation: schema });
+};
+
+export const resetAvailability = (isDefault, employeeId) => async (
+  dispatch
+) => {
+  const token = JSON.parse(localStorage.getItem("EG-token"));
+  const schema = gql`
+    mutation {
+      resetAvailability (
+        employeeId: "${employeeId}"
+        isDefault: ${!!isDefault}
+      ){
+        availability_next
+        availability_default
+      }
+    }
+  `;
+  const res = await client(token).mutate({ mutation: schema });
+  console.log(res.data)
+  const { availability_next, availability_default } = res.data.resetAvailability
+  dispatch({ type: RESET_AVAILABILITY, payload: {
+    availability_default,
+    availability_next
+  }})
 };

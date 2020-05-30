@@ -1,8 +1,8 @@
-import { GET_USERS, CREATE_USER, DELETE_USER, UPDATE_USER } from "../actions/types";
+import { FETCH_USERS, CREATE_USER, DELETE_USER, UPDATE_USER } from "../actions/types";
 
 export default function (state = [], action) {
   switch (action.type) {
-    case GET_USERS:
+    case FETCH_USERS:
       return action.payload;
     case CREATE_USER:
       return state.concat(action.payload);
