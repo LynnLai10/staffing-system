@@ -128,9 +128,9 @@ class EditStaff extends React.Component {
             </Button>
           </Modal.Footer>
         </Modal>
-        <a onClick={this.open} href="javascript:void(0)">
+        <Button onClick={this.open} appearance="link" className="staffList__btn">
           Edit
-        </a>
+        </Button>
       </div>
     );
   }

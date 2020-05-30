@@ -5,4 +5,5 @@ export const CREATE_USER = "create_user";
 export const FETCH_USERS = "fetch_users";
 export const UPDATE_USER = "update_user";
 export const DELETE_USER = "delete_user";
-export const RESET_AVAILABILITY = "reset_availability";
+export const UPDATE_AVAILABILITY = "update_availability";
+export const CHANGE_AVAILABILITY = "change_availability";

@@ -6,7 +6,7 @@ import NewStaff from './NewStaff'
 
 class StaffManagement extends React.Component {
   componentDidMount() {
-    this.props.getUsers()
+    this.props.fetchUsers()
   }
   render() {
     return (
@@ -18,6 +18,7 @@ class StaffManagement extends React.Component {
   } 
 }
 const mapStateToProps = ({users}) => {
+  console.log(users)
   return { users }
 }
 

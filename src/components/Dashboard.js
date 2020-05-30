@@ -1,13 +1,17 @@
 import React from 'react';
-import { Router, Route } from 'react-router-dom';
+// import { Router, Route } from 'react-router-dom';
 import { connect } from 'react-redux';
 import * as actions from '../actions';
-import history from '../history'
+// import history from '../history'
 
 class Dashboard extends React.Component {
   componentDidMount() {
-    
-    console.log('fetch')
+    // const token = JSON.parse(localStorage.getItem('EG-token'))
+    // if (!this.props.auth && !token && this.state.user) {
+    //   console.log('triggle.')
+    //   history.push('/')
+    // }
+    // this.props.fetchUser()
   }
   render() {
     return (

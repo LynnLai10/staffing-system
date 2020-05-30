@@ -27,9 +27,9 @@ class DeleteStaff extends React.Component {
     const { employeeId, name } = this.props.data;
     return (
       <div className="modal-container">
-        <a onClick={this.open} herf="#">
+        <Button onClick={this.open} appearance="link" className="staffList__btn">
           Remove
-        </a>
+        </Button>
 
         <Modal
           backdrop="static"

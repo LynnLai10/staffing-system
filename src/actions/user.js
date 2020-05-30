@@ -9,8 +9,6 @@ import {
   FETCH_USERS,
   UPDATE_USER,
   DELETE_USER,
-  UPDATE_AVAILABILITY,
-  CHANGE_AVAILABILITY
 } from "./types";
 
 export const fetchToken = () => async (dispatch) => {
@@ -67,6 +65,7 @@ export const fetchUser = () => async (dispatch) => {
   `;
   const res = await client(token).query({ query: schema });
   const data = res.data.me
+  console.log(data)
   data.availability_next = JSON.parse(data.availability_next)
   data.availability_default = JSON.parse(data.availability_default)
   dispatch({ type: FETCH_USER, payload: data});
@@ -119,7 +118,6 @@ export const fetchUsers = () => async (dispatch) => {
 export const updateUser = (oldEmployeeId, formValue) => async (dispatch) => {
   const token = JSON.parse(localStorage.getItem("EG-token"));
   const { employeeId, name, sex, accountType } = formValue;
-  console.log(formValue)
   const schema = gql`
     mutation {
       updateUser (
@@ -135,8 +133,9 @@ export const updateUser = (oldEmployeeId, formValue) => async (dispatch) => {
       }
     }
   `;
-  await client(token).mutate({ mutation: schema });
-  dispatch({ type: UPDATE_USER, payload: formValue });
+  const res = await client(token).mutate({ mutation: schema });
+  const data = JSON.stringify(res.data.updateUser);
+  dispatch({ type: UPDATE_USER, payload: JSON.parse(data) });
 };
 
 export const deleteUser = (employeeId) => async (dispatch) => {
@@ -169,39 +168,3 @@ export const resetPassword = (employeeId) => async (dispatch) => {
   `;
   await client(token).mutate({ mutation: schema });
 };
-
-export const updateAvailability = (isDefault, employeeId, availability) => async (
-  dispatch
-) => {
-  const token = JSON.parse(localStorage.getItem("EG-token"));
-  availability = availability === 'reset' ? 'reset' : JSON.stringify(availability)
-  const schema = gql`
-    mutation {
-      updateUser (
-        employeeId: "${employeeId}"
-        data: {
-          ${
-            isDefault ? "availability_default" : "availability_next"
-          }: "${availability}"
-        }
-      ){
-        availability_next
-        availability_default
-      }
-    }
-  `;
-  const res = await client(token).mutate({ mutation: schema });
-  const { availability_next, availability_default } = res.data.updateUser
-  dispatch({ type: UPDATE_AVAILABILITY, payload: {
-    availability_default: JSON.parse(availability_default),
-    availability_next: JSON.parse(availability_next)
-  }})
-};
-
-export const changeAvailability = (isDefault, index, availability) => async dispatch => {
-  availability[index] = !availability[index]
-  dispatch ({ type: CHANGE_AVAILABILITY, payload: {
-    isDefault,
-    availability
-  }})
-}

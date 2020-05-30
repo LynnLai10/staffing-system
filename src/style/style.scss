@@ -20,7 +20,12 @@
   font-size: 1rem;
 }
 
-.staffList__btn {
+.staffList__groupBtn {
   display: flex;
   justify-content: space-around;
+}
+
+.staffList__btn {
+  padding: 0;
+  margin-top: -0.4rem;
 }

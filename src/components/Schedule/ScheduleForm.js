@@ -1,7 +1,7 @@
 import React from "react";
 import moment from "moment";
-import { connect } from 'react-redux';
-import * as actions from '../../actions';
+import { connect } from "react-redux";
+import * as actions from "../../actions";
 import { Button, Alert } from "rsuite";
 class ScheduleForm extends React.Component {
   constructor(props) {
@@ -9,8 +9,7 @@ class ScheduleForm extends React.Component {
     this.state = {
       days: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
       dates: [],
-      availability: []
-    }
+    };
   }
 
   getDate = () => {
@@ -26,33 +25,36 @@ class ScheduleForm extends React.Component {
       dates,
     });
   };
-  
-  componentDidMount() {
-    this.getDate()
-  }
 
-  componentWillReceiveProps(nextProps) {
-    this.setState({
-      availability: JSON.parse(nextProps.availability)
-    })
+  componentDidMount() {
+    this.getDate();
   }
 
   handleClick(index) {
-    let availability = this.state.availability;
-    availability[index] = !availability[index];
-    this.setState({
-      availability,
-    });
+    this.props.changeAvailability(
+      this.props.isDefault,
+      index,
+      this.props.availability
+    );
   }
   handleSubmit = () => {
-    this.props.saveAvailability(this.props.isDefault,this.props.employeeId, this.state.availability)
+    this.props.updateAvailability(
+      this.props.isDefault,
+      this.props.employeeId,
+      this.props.availability
+    );
     Alert.success("Success");
-  }
+  };
   handleReset = () => {
-    this.props.resetAvailability(this.props.isDefault,this.props.employeeId)
-    Alert.success("Success")
-  }
+    this.props.updateAvailability(
+      this.props.isDefault,
+      this.props.employeeId,
+      "reset"
+    );
+    setTimeout(() => Alert.success("Success"), 1500);
+  };
   render() {
+    console.log("render");
     return (
       <div className="scheduleForm__container">
         <div className="scheduleForm__panel">
@@ -62,23 +64,24 @@ class ScheduleForm extends React.Component {
             ))}
           </div>
           <div className="scheduleForm__panelItem">
-          {this.state.availability.map((item, index) => (
-            <Button
-              appearance={item ? "primary" : "ghost"}
-              className="scheduleForm__btn"
-              key={`day${index}`}
-              onClick={() => this.handleClick(index)}
-            >
-              {this.state.dates[index]}
-            </Button>
-          ))}
+            {this.props.availability &&
+              this.props.availability.map((item, index) => (
+                <Button
+                  appearance={item ? "primary" : "ghost"}
+                  className="scheduleForm__btn"
+                  key={index}
+                  onClick={() => this.handleClick(index)}
+                >
+                  {this.state.dates[index]}
+                </Button>
+              ))}
           </div>
         </div>
         <div className="scheduleForm__footer">
           <Button appearance="primary" size="lg" onClick={this.handleSubmit}>
             Save
           </Button>
-          <Button appearance="ghost" size="lg" onClick={this.handleReset}>
+          <Button appearance="default" size="lg" onClick={this.handleReset}>
             Reset
           </Button>
         </div>
@@ -87,11 +90,11 @@ class ScheduleForm extends React.Component {
   }
 }
 const mapStateToProps = ({ user }, ownProps) => {
-  const { employeeId, availability_next, availability_default} = user
-  return { 
+  const { employeeId, availability_next, availability_default } = user;
+  return {
     employeeId,
-    availability: ownProps.isDefault? availability_default : availability_next
-  }
-}
+    availability: ownProps.isDefault ? availability_default : availability_next,
+  };
+};
 
 export default connect(mapStateToProps, actions)(ScheduleForm);

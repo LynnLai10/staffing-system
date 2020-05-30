@@ -8,7 +8,7 @@ const ScheduleNext = () => {
       <PanelNav activeKey={"next"} />
       <Toggle onChange={() => console.log("Toggle Changed.")} className="toggle"/> Use default
       setting
-      <ScheduleForm />
+      <ScheduleForm isDefault={false}/>
     </div>
   );
 };

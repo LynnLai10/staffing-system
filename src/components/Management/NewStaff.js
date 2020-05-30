@@ -126,7 +126,7 @@ class NewStaff extends React.Component {
             </Button>
           </Modal.Footer>
         </Modal>
-        <Button onClick={this.open}>New Staff</Button>
+        <Button appearance="primary" onClick={this.open}>New Staff</Button>
       </div>
     );
   }
