@@ -107,9 +107,9 @@ export const createUser = (formValue) => async (dispatch) => {
       }
     }
   `;
-  const scheduleSchema = gql`
+  const freetimeSchema = gql`
     mutation {
-      createSchedule (
+      createFreetime (
         employeeId: "${employeeId}"
       ) {
         id
@@ -117,7 +117,7 @@ export const createUser = (formValue) => async (dispatch) => {
     }
   `
   await client(token).mutate({ mutation: schema });
-  await client(null).mutate({ mutation: scheduleSchema })
+  await client(null).mutate({ mutation: freetimeSchema })
   dispatch({ type: CREATE_USER, payload: formValue });
 };
 
@@ -209,7 +209,7 @@ export const fetchFreetime = () => async (dispatch) => {
   const token = JSON.parse(sessionStorage.getItem("EG-token"));
   const schema = gql`
     query {
-      mySchedules {
+      myFreetimes {
         freetime_next
         freetime_default
         useDefault
@@ -217,12 +217,12 @@ export const fetchFreetime = () => async (dispatch) => {
     }
   `;
   const res = await client(token).query({ query: schema });
-  const parsedFreetime = parseData(undefined, res.data.mySchedules[0])
+  const parsedFreetime = parseData(undefined, res.data.myFreetimes[0])
   dispatch({
     type: FETCH_FREETIME,
     payload: {
       ...parsedFreetime,
-      useDefault: res.data.mySchedules[0].useDefault,
+      useDefault: res.data.myFreetimes[0].useDefault,
     },
   });
 };
@@ -233,7 +233,7 @@ export const updateFreetime = (isDefault, freetime) => async (dispatch) => {
   const stringifyFreetime = JSON.stringify(freetime)
   const schema = gql`
     mutation {
-      updateSchedule (
+      updateFreetime (
         data: {
           ${key}: "${stringifyFreetime}"
         }
@@ -245,7 +245,7 @@ export const updateFreetime = (isDefault, freetime) => async (dispatch) => {
   const res = await client(token).mutate({ mutation: schema });
   dispatch({
     type: UPDATE_FREETIME,
-    payload: parseData(isDefault, res.data.updateSchedule),
+    payload: parseData(isDefault, res.data.updateFreetime),
   });
 };
 
@@ -267,7 +267,7 @@ export const resetFreetime = (isDefault) => async (dispatch) => {
   const key = isDefault ? "freetime_default" : "freetime_next";
   const schema = gql`
     mutation {
-      resetSchedule(
+      resetFreetime(
         resetItem: "${key}"
       ) {
         ${key}
@@ -277,7 +277,7 @@ export const resetFreetime = (isDefault) => async (dispatch) => {
   const res = await client(token).mutate({ mutation: schema });
   dispatch({
     type: UPDATE_FREETIME,
-    payload: parseData(isDefault, res.data.resetSchedule),
+    payload: parseData(isDefault, res.data.resetFreetime),
   });
 };
 
@@ -285,7 +285,7 @@ export const changeUseDefault = (useDefault) => async (dispatch) => {
   const token = JSON.parse(sessionStorage.getItem("EG-token"));
   const schema = gql`
     mutation {
-      updateSchedule (
+      updateFreetime (
         data: {
           useDefault: ${!useDefault}
         }
