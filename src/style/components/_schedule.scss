@@ -1,3 +1,8 @@
 .toggle {
-  margin: $s-size;
+  display: flex;
+  justify-content: space-around;
+  // border: solid;
+  // border-radius: 0.5rem;
+  width: 30rem; 
+  padding: 2rem;  
 }

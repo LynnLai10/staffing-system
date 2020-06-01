@@ -4,10 +4,14 @@
 }
 
 .scheduleForm__panel {
-    // display: flex;
-    // justify-content: center;
     width: 64.5rem;
-    margin: 1rem;
+    margin: auto 1rem;
+    margin-top: -2.5rem;
+}
+
+.scheduleForm__panel h6 {
+    display: inline-block;
+    margin: 0 0 1rem 1rem;
 }
 
 .scheduleForm__panelTitle {

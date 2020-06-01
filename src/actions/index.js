@@ -252,7 +252,6 @@ export const updateFreetime = (isDefault, freetime) => async (dispatch) => {
 export const changeFreetime = (isDefault, index, freetime) => async (
   dispatch
 ) => {
-  console.log(freetime)
   dispatch({
     type: CHANGE_FREETIME,
     payload: {

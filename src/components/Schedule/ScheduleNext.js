@@ -3,29 +3,35 @@ import { connect } from "react-redux";
 import * as actions from "../../actions";
 import PanelNav from "../PanelNav";
 import ScheduleForm from "./ScheduleForm";
-import { Toggle } from "rsuite";
+import { Toggle, Alert } from "rsuite";
 
 class ScheduleNext extends React.Component {
-
   handleToggle = () => {
-    this.props.changeUseDefault(this.props.useDefault)
-  }
+    this.props.changeUseDefault(this.props.useDefault);
+    Alert.info('Pending...', 2500)
+    setTimeout(() => Alert.success("Success"), 2500);
+  };
   render() {
-    console.log(this.props.useDefault)
     return (
       <div>
         <PanelNav activeKey={"next"} />
-        <Toggle checked={this.props.useDefault} onChange={this.handleToggle} className="toggle"/> Use default
-        setting
+        <div className="toggle">
+          <Toggle
+            checked={this.props.useDefault}
+            onChange={this.handleToggle}
+          />
+          <p>Enable Default Setting</p>
+        </div>
+
         {!this.props.useDefault && <ScheduleForm isDefault={false} />}
       </div>
     );
   }
-};
+}
 
 const mapStateToProps = ({ user }) => {
   return {
-    useDefault: user.schedule.useDefault
+    useDefault: user.schedule.useDefault,
   };
 };
 

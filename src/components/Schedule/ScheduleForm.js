@@ -9,20 +9,25 @@ class ScheduleForm extends React.Component {
     this.state = {
       days: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
       dates: [],
+      startDate: moment(),
+      endDate: moment(),
     };
   }
 
   getDate = () => {
     const dates = [];
-    const startDate =
+    const date =
       moment().isoWeek() % 2 === 0
         ? moment().startOf("isoWeek").add(6, "days")
         : moment().startOf("isoWeek").add(13, "days");
+    const startDate = moment(date).add(1, "day");
     for (let i = 0; i < 14; i++) {
-      dates.push(startDate.add(1, "days").format("D"));
+      dates.push(date.add(1, "days").format("D"));
     }
     this.setState({
       dates,
+      startDate,
+      endDate: date,
     });
   };
 
@@ -40,13 +45,21 @@ class ScheduleForm extends React.Component {
   };
   handleReset = () => {
     this.props.resetFreetime(this.props.isDefault);
+    Alert.info('Pending...', 2000)
     setTimeout(() => Alert.success("Success"), 2000);
   };
   render() {
-    console.log("render");
     return (
       <div className="scheduleForm__container">
         <div className="scheduleForm__panel">
+          {this.props.isDefault ? (
+            <h6>{" "}</h6>
+          ) : (
+            <h6>
+              Schedule Period: {this.state.startDate.format("DD/MM")} -{" "}
+              {this.state.endDate.format("DD/MM")}
+            </h6>
+          )}
           <div className="scheduleForm__panelTitle">
             {this.state.days.map((item) => (
               <h5 key={item}>{item}</h5>
