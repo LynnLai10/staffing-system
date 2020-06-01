@@ -1,7 +1,7 @@
 import React from "react";
-import { connect } from 'react-redux';
-import * as actions from '../../actions'
-import { Modal, Button, Icon } from "rsuite";
+import { connect } from "react-redux";
+import * as actions from "../../actions";
+import { Modal, Button, Icon, IconButton, Alert } from "rsuite";
 
 class DeleteStaff extends React.Component {
   constructor(props) {
@@ -9,27 +9,28 @@ class DeleteStaff extends React.Component {
     this.state = {
       show: false,
     };
-    this.close = this.close.bind(this);
-    this.open = this.open.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
   }
-  close() {
+  close = () => {
     this.setState({ show: false });
   }
-  open() {
+  open = () => {
     this.setState({ show: true });
   }
-  handleSubmit() {
+  handleSubmit = () => {
     this.props.deleteUser(this.props.data.employeeId);
     this.setState({ show: false });
+    setTimeout(() => Alert.success("Success"), 2000);
   }
   render() {
     const { employeeId, name } = this.props.data;
     return (
       <div className="modal-container">
-        <Button onClick={this.open} appearance="link" className="staffList__btn">
-          Remove
-        </Button>
+        <IconButton
+          appearance="subtle"
+          onClick={this.open}
+          icon={<Icon icon="trash" />}
+          className="staffList__btn"
+        />
 
         <Modal
           backdrop="static"

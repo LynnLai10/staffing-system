@@ -1,7 +1,7 @@
 import React from "react";
 import { connect } from 'react-redux';
 import * as actions from '../../actions'
-import { Modal, Button, Icon } from "rsuite";
+import { Modal, Button, Icon, IconButton } from "rsuite";
 
 class ResetPassword extends React.Component {
   constructor(props) {
@@ -9,17 +9,14 @@ class ResetPassword extends React.Component {
     this.state = {
       show: false,
     };
-    this.close = this.close.bind(this);
-    this.open = this.open.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
   }
-  close() {
+  close = () => {
     this.setState({ show: false });
   }
-  open() {
+  open = () => {
     this.setState({ show: true });
   }
-  handleSubmit() {
+  handleSubmit = () => {
     this.props.resetPassword(this.props.data.employeeId);
     this.setState({ show: false });
   }
@@ -27,9 +24,12 @@ class ResetPassword extends React.Component {
     const { employeeId, name } = this.props.data;
     return (
       <div className="modal-container">
-        <Button onClick={this.open} appearance="link" className="staffList__btn">
-          Reset Password
-        </Button>
+        <IconButton
+          appearance="subtle"
+          onClick={this.open}
+          icon={<Icon icon="unlock-alt" />}
+          className="staffList__btn"
+        />
 
         <Modal
           backdrop="static"

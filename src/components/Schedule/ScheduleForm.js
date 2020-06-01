@@ -28,30 +28,19 @@ class ScheduleForm extends React.Component {
 
   componentDidMount() {
     this.getDate();
+    this.props.fetchFreetime();
   }
 
-  handleClick(index) {
-    this.props.changeAvailability(
-      this.props.isDefault,
-      index,
-      this.props.availability
-    );
-  }
+  handleClick = (index) => {
+    this.props.changeFreetime(this.props.isDefault, index, this.props.freetime);
+  };
   handleSubmit = () => {
-    this.props.updateAvailability(
-      this.props.isDefault,
-      this.props.employeeId,
-      this.props.availability
-    );
+    this.props.updateFreetime(this.props.isDefault, this.props.freetime);
     Alert.success("Success");
   };
   handleReset = () => {
-    this.props.updateAvailability(
-      this.props.isDefault,
-      this.props.employeeId,
-      "reset"
-    );
-    setTimeout(() => Alert.success("Success"), 1500);
+    this.props.resetFreetime(this.props.isDefault);
+    setTimeout(() => Alert.success("Success"), 2000);
   };
   render() {
     console.log("render");
@@ -64,8 +53,8 @@ class ScheduleForm extends React.Component {
             ))}
           </div>
           <div className="scheduleForm__panelItem">
-            {this.props.availability &&
-              this.props.availability.map((item, index) => (
+            {this.props.freetime &&
+              this.props.freetime.map((item, index) => (
                 <Button
                   appearance={item ? "primary" : "ghost"}
                   className="scheduleForm__btn"
@@ -90,10 +79,9 @@ class ScheduleForm extends React.Component {
   }
 }
 const mapStateToProps = ({ user }, ownProps) => {
-  const { employeeId, availability_next, availability_default } = user;
+  const { freetime_next, freetime_default } = user.schedule;
   return {
-    employeeId,
-    availability: ownProps.isDefault ? availability_default : availability_next,
+    freetime: ownProps.isDefault ? freetime_default : freetime_next,
   };
 };
 

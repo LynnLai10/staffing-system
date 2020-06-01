@@ -1,11 +1,17 @@
 import { FETCH_AUTH, LOGOUT } from "../actions/types";
 
-export default function (state = false, action) {
+export default function (state = {}, action) {
   switch (action.type) {
     case FETCH_AUTH:
-      return action.payload;
+      return {
+        ...state,
+        authenticated: true
+      };
     case LOGOUT:
-      return false;
+      return {
+        ...state,
+        authenticated: false
+      };
     default:
       return state;
   }

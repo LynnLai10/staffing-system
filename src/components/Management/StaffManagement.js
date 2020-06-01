@@ -1,25 +1,29 @@
-import React from 'react'
-import { connect } from 'react-redux';
-import * as actions from '../../actions'
-import StaffList from './StaffList'
-import NewStaff from './NewStaff'
+import React from "react";
+import { connect } from "react-redux";
+import * as actions from "../../actions";
+import StaffList from "./StaffList";
+import StaffFormModal from "./StaffFormModal";
 
 class StaffManagement extends React.Component {
   componentDidMount() {
-    this.props.fetchUsers()
+    if (this.props.auth.authenticated) {
+      this.props.fetchUsers();
+    }
   }
   render() {
     return (
       <div>
-        <NewStaff />
-        {this.props.users && <StaffList data={JSON.stringify(this.props.users)}/>}
+        <StaffFormModal />
+        <br />
+        {this.props.users && (
+          <StaffList data={JSON.stringify(this.props.users)} />
+        )}
       </div>
-    )
-  } 
+    );
+  }
 }
-const mapStateToProps = ({users}) => {
-  console.log(users)
-  return { users }
-}
+const mapStateToProps = ({ auth, users }) => {
+  return { auth, users };
+};
 
-export default connect(mapStateToProps, actions)(StaffManagement)
+export default connect(mapStateToProps, actions)(StaffManagement);

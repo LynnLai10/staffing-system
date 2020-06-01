@@ -13,6 +13,8 @@ import {
   RadioGroup,
   Schema,
   Alert,
+  IconButton,
+  Icon,
 } from "rsuite";
 
 const { StringType } = Schema.Types;
@@ -41,46 +43,49 @@ class CustomField extends React.PureComponent {
   }
 }
 
-class EditStaff extends React.Component {
+class StaffFormModal extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {
+    this.initialState = {
       formValue: {
         employeeId: "",
         name: "",
-        sex: "Male",
-        accountType: "Staff",
+        sex: "",
+        accountType: "",
       },
       originalId: "",
       show: false,
     };
-    this.close = this.close.bind(this);
-    this.open = this.open.bind(this);
-    this.handleChange = this.handleChange.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
+    this.state = Object.assign({}, this.initialState);
   }
-  close() {
-    this.setState({ show: false });
-  }
-  open() {
+  close = () => {
+    this.setState(this.initialState);
+  };
+  open = () => {
     this.setState({ show: true });
-    delete this.props.data.__typename;
-    delete this.props.data.password;
-    this.setState({
-      formValue: this.props.data,
-      originalId: this.props.data.employeeId,
-    });
-  }
-  handleChange(value) {
+    if (this.props.isEdit) {
+      delete this.props.data.__typename;
+      delete this.props.data.password;
+      this.setState({
+        originalId: this.props.data.employeeId,
+      });
+      this.setState({
+        formValue: this.props.data,
+      });
+    }
+  };
+  handleChange = (value) => {
     this.setState({
       formValue: value,
     });
-  }
-  handleSubmit() {
+  };
+  handleSubmit = () => {
     const { formValue } = this.state;
-    this.props.updateUser(this.state.originalId, formValue);
-    Alert.success("Success");
-  }
+    this.props.isEdit
+      ? this.props.updateUser(this.state.originalId, formValue)
+      : this.props.createUser(formValue);
+      setTimeout(() => Alert.success("Success"), 2000);
+  };
   render() {
     return (
       <div>
@@ -128,12 +133,22 @@ class EditStaff extends React.Component {
             </Button>
           </Modal.Footer>
         </Modal>
-        <Button onClick={this.open} appearance="link" className="staffList__btn">
-          Edit
-        </Button>
+
+        {this.props.isEdit ? (
+          <IconButton
+            appearance="subtle"
+            onClick={this.open}
+            icon={<Icon icon="edit2" />}
+            className="staffList__btn"
+          />
+        ) : (
+          <Button appearance="ghost" onClick={this.open}>
+            New Staff
+          </Button>
+        )}
       </div>
     );
   }
 }
 
-export default connect(null, actions)(EditStaff);
+export default connect(null, actions)(StaffFormModal);

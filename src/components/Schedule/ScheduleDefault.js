@@ -1,13 +1,13 @@
-import React from 'react'
-import PanelNav from '../PanelNav'
-import ScheduleForm from './ScheduleForm'
+import React from "react";
+import PanelNav from "../PanelNav";
+import ScheduleForm from "./ScheduleForm";
 const ScheduleDeafult = () => {
-    return (
-        <div>
-            <PanelNav activeKey={'default'} /> 
-            <ScheduleForm isDefault={true}/>
-        </div>
-    )
-}
+  return (
+    <div>
+      <PanelNav activeKey={"default"} />
+      <ScheduleForm isDefault />
+    </div>
+  );
+};
 
-export default ScheduleDeafult
+export default ScheduleDeafult;

@@ -1,6 +1,6 @@
 import React from "react";
 import { Table } from "rsuite";
-import EditStaff from './EditStaff'
+import StaffFormModal from './StaffFormModal'
 import DeleteStaff from './DeleteStaff'
 import ResetPassword from './ResetPassword'
 
@@ -16,7 +16,7 @@ class StaffList extends React.Component {
             <Cell dataKey="employeeId" />
           </Column>
 
-          <Column width={120} align="center">
+          <Column width={180} align="center">
             <HeaderCell>Name</HeaderCell>
             <Cell dataKey="name" />
           </Column>
@@ -31,14 +31,14 @@ class StaffList extends React.Component {
             <Cell dataKey="accountType" />
           </Column>
 
-          <Column width={270} fixed="right" align="center">
+          <Column width={150} fixed="right" align="center">
             <HeaderCell>Action</HeaderCell>
 
             <Cell>
               {(rowData) => {
                 return (
                   <span className="staffList__groupBtn"> 
-                    <EditStaff data={rowData} />|
+                    <StaffFormModal data={rowData} isEdit />|
                     <ResetPassword Password data={rowData} />|
                     <DeleteStaff data={rowData} />
                   </span>
