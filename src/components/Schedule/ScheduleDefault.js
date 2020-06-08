@@ -4,7 +4,7 @@ import ScheduleForm from "./ScheduleForm";
 const ScheduleDeafult = () => {
   return (
     <div>
-      <PanelNav activeKey={"default"} />
+      <PanelNav activeKey={"default"} path={"schedule"}/>
       <ScheduleForm isDefault />
     </div>
   );

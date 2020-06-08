@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux'
-import * as actions from '../actions'
+import * as actions from '../actions/users'
 import LoginForm from './LoginForm'
 import MyFooter from './MyFooter'
 import { Panel } from 'rsuite';

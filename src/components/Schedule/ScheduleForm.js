@@ -1,8 +1,11 @@
 import React from "react";
 import moment from "moment";
 import { connect } from "react-redux";
-import * as actions from "../../actions";
+import * as actions from "../../actions/freetime";
+import getDate from "../../utils/getDate";
+import SchedulePeriod from "./SchedulePeriod";
 import { Button, Alert } from "rsuite";
+
 class ScheduleForm extends React.Component {
   constructor(props) {
     super(props);
@@ -14,25 +17,8 @@ class ScheduleForm extends React.Component {
     };
   }
 
-  getDate = () => {
-    const dates = [];
-    const date =
-      moment().isoWeek() % 2 === 0
-        ? moment().startOf("isoWeek").add(6, "days")
-        : moment().startOf("isoWeek").add(13, "days");
-    const startDate = moment(date).add(1, "day");
-    for (let i = 0; i < 14; i++) {
-      dates.push(date.add(1, "days").format("D"));
-    }
-    this.setState({
-      dates,
-      startDate,
-      endDate: date,
-    });
-  };
-
   componentDidMount() {
-    this.getDate();
+    this.setState(getDate());
     this.props.fetchFreetime();
   }
 
@@ -45,36 +31,36 @@ class ScheduleForm extends React.Component {
   };
   handleReset = () => {
     this.props.resetFreetime(this.props.isDefault);
-    Alert.info('Pending...', 2000)
+    Alert.info("Pending...", 2000);
     setTimeout(() => Alert.success("Success"), 2000);
   };
   render() {
+    const { isDefault, freetime } = this.props;
+    const { startDate, endDate, dates, days } = this.state;
     return (
       <div className="scheduleForm__container">
         <div className="scheduleForm__panel">
-          {this.props.isDefault ? (
-            <h6>{" "}</h6>
-          ) : (
-            <h6>
-              Schedule Period: {this.state.startDate.format("DD/MM")} -{" "}
-              {this.state.endDate.format("DD/MM")}
-            </h6>
-          )}
+          <SchedulePeriod
+            isDefault={isDefault}
+            startDate={startDate}
+            endDate={endDate}
+          />
+
           <div className="scheduleForm__panelTitle">
-            {this.state.days.map((item) => (
+            {days.map((item) => (
               <h5 key={item}>{item}</h5>
             ))}
           </div>
           <div className="scheduleForm__panelItem">
-            {this.props.freetime &&
-              this.props.freetime.map((item, index) => (
+            {freetime &&
+              freetime.map((item, index) => (
                 <Button
                   appearance={item ? "primary" : "ghost"}
                   className="scheduleForm__btn"
                   key={index}
                   onClick={() => this.handleClick(index)}
                 >
-                  {this.state.dates[index]}
+                  {dates[index]}
                 </Button>
               ))}
           </div>

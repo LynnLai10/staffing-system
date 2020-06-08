@@ -1,7 +1,7 @@
 import React from "react";
 import { Router, Route, Switch } from "react-router-dom";
 import { connect } from "react-redux";
-import * as actions from "../actions";
+import * as actions from "../actions/users";
 import history from '../history'
 import { Container, Sidebar, Content, Footer, Panel } from "rsuite";
 import SidebarNav from "./SidebarNav";
@@ -14,8 +14,9 @@ import MelonFruit from "./CheckoutSystem/MelonFruit";
 import Rice from "./CheckoutSystem/Rice";
 import Casher from "./Training/Casher";
 import TallyClerk from "./Training/TallyClerk";
-import StaffManagement from "./Management/StaffManagement";
-import Scheduling from "./Management/Scheduling";
+import StaffManagement from "./Management/StaffManagement/StaffManagement";
+import SchedulingNext from "./Management/Scheduling/SchedulingNext";
+import SchedulingDefault from "./Management/Scheduling/SchedulingDefault";
 import ChangePassword from "./Management/ChangePassword";
 
 class Dashboard extends React.Component {
@@ -72,8 +73,12 @@ class Dashboard extends React.Component {
                       component={StaffManagement}
                     />
                     <Route
-                      path="/dashboard/management/scheduling"
-                      component={Scheduling}
+                      path="/dashboard/management/scheduling/next"
+                      component={SchedulingNext}
+                    />
+                    <Route
+                      path="/dashboard/management/scheduling/default"
+                      component={SchedulingDefault}
                     />
                     <Route
                       path="/dashboard/management/changePassword"

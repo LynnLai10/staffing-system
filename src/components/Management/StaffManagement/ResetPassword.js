@@ -1,6 +1,6 @@
 import React from "react";
 import { connect } from 'react-redux';
-import * as actions from '../../actions'
+import * as actions from '../../../actions/users'
 import { Modal, Button, Icon, IconButton } from "rsuite";
 
 class ResetPassword extends React.Component {

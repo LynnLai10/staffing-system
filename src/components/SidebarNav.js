@@ -1,6 +1,5 @@
 import React from "react";
 import { connect } from "react-redux";
-import * as actions from "../actions";
 import { Sidenav, Nav, Dropdown, Icon, Divider } from "rsuite";
 
 class SidebarNav extends React.Component {
@@ -96,7 +95,7 @@ class SidebarNav extends React.Component {
                 {this.props.user && this.props.user.accountType === "Admin" && (
                   <Dropdown.Item
                     eventKey="5-3"
-                    href="/dashboard/management/scheduling"
+                    href="/dashboard/management/scheduling/next"
                   >
                     Scheduling
                   </Dropdown.Item>
@@ -114,4 +113,4 @@ const mapStateToProps = ({ auth, user }) => {
   return { auth, user: user.user };
 };
 
-export default connect(mapStateToProps, actions)(SidebarNav);
+export default connect(mapStateToProps, null)(SidebarNav);
