@@ -15,7 +15,6 @@ const initialState = {
 export default function (state = initialState, action) {
   switch (action.type) {
     case FETCH_DEFAULT_SCHEDULE:
-      console.log(action.payload)
       return action.payload.isDefault
         ? {
             ...state,
@@ -50,7 +49,6 @@ export default function (state = initialState, action) {
         }
         return item;
       });
-      console.log(schedule_days_updateStaff);
       return isDefault
         ? {
             ...state,

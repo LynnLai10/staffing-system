@@ -63,6 +63,7 @@ class ScheduleStaff extends React.Component {
           placement="bottomEnd"
           value={staff? staff.employeeId : ""}
           searchable={false}
+          disabledItemValues={this.props.disabledStaffs.map(item => item.staff.employeeId)}
           onChange={this.handleChange_staff}
         />
         <IconButton

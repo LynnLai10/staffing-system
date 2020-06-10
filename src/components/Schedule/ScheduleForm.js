@@ -18,7 +18,7 @@ class ScheduleForm extends React.Component {
   }
 
   componentDidMount() {
-    this.setState(getDate());
+    this.setState(getDate(this.props.isDefault));
     this.props.fetchFreetime();
   }
 

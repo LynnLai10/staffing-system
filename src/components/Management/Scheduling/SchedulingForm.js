@@ -5,7 +5,7 @@ import * as actions from "../../../actions/defaultSchedule";
 import ScheduleDrawer from "./ScheduleDrawer";
 import SchedulePeriod from "../../Schedule/SchedulePeriod";
 import getDate from "../../../utils/getDate";
-import { Button, Loader } from "rsuite";
+import { Loader } from "rsuite";
 
 class SchedulingForm extends React.Component {
   constructor(props) {
@@ -20,46 +20,20 @@ class SchedulingForm extends React.Component {
   }
 
   componentDidMount = () => {
-    this.setState(getDate(), () => {
+    this.setState(getDate(this.props.isDefault), () => {
       this.props
-        .fecthDefaultSchedule(
-          this.props.isDefault ? "0" : this.state.schedule_No
-        )
+        .fecthDefaultSchedule(this.state.schedule_No)
         .then(
           () =>
             !this.props.schedule &&
-            this.props.createDefaultSchedule(
-              this.props.isDefault ? "0" : this.state.schedule_No
-            )
+            this.props.createDefaultSchedule(this.state.schedule_No)
         );
     });
     this.props.fetchStaffList();
   };
-
-  handleClick = () => {
-    // this.setState({
-    //   loading: true,
-    // });
-    // setTimeout(() => {
-    //   this.props.fecthDefaultSchedule(this.props.isDefault? "0" : this.state.schedule_No);
-    // }, 90000)
-    // setTimeout(() => {
-    //   this.setState({
-    //     loading: false,
-    //   });
-    // }, 93000);
-  };
   render() {
-    console.log(this.props.schedule);
-    const { isDefault, schedule } = this.props;
-    const {
-      startDate,
-      endDate,
-      dates,
-      days,
-      schedule_No,
-      loading,
-    } = this.state;
+    const { isDefault, schedule, staffList } = this.props;
+    const { startDate, endDate, dates, days, schedule_No } = this.state;
     return (
       <div className="scheduleForm__container">
         <div className="scheduleForm__panel">
@@ -87,6 +61,7 @@ class SchedulingForm extends React.Component {
                   index={index}
                   startDate={startDate}
                   data={schedule.schedule_days[index]}
+                  staffList={staffList}
                 />
               ))}
             <div>
@@ -107,11 +82,11 @@ class SchedulingForm extends React.Component {
   }
 }
 const mapStateToProps = ({ schedule }, ownProps) => {
-  console.log(schedule);
   return {
     schedule: ownProps.isDefault
       ? schedule.schedule_default
       : schedule.schedule_next,
+    staffList: schedule.staffList
   };
 };
 

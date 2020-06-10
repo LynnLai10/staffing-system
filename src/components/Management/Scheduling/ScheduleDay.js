@@ -16,13 +16,37 @@ class ScheduleDay extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      staffs: []
+      staffs: [],
+      staffList: {},
+      disabledStaffs: {
+        tallyClerk: [],
+        casher: [],
+      },
     };
   }
   componentDidMount() {
-    this.setState({
-      staffs: this.props.data.schedule_staffs,
-    });
+    this.setState(
+      {
+        staffs: this.props.data.schedule_staffs,
+        staffList: this.props.staffList,
+      },
+      () => {
+        this.setState((prevState) => ({
+          disabledStaffs: {
+            tallyClerk: prevState.staffs.filter(
+              (item) =>
+                !!item.staff &&
+                item.position === "Tally Clerk"
+            ),
+            casher: prevState.staffs.filter(
+              (item) =>
+                !!item.staff &&
+                item.position === "Casher"
+            ),
+          },
+        }));
+      }
+    );
   }
   handleAddStaff = (tallyClerk) => {
     const defaultStaff = {
@@ -33,8 +57,8 @@ class ScheduleDay extends React.Component {
         end: "19",
       },
       staff: {
-        employeeId: ""
-      }
+        employeeId: "",
+      },
     };
     this.setState((prevState) => ({
       staffs: [...prevState.staffs, defaultStaff],
@@ -44,8 +68,25 @@ class ScheduleDay extends React.Component {
     const staffs = this.state.staffs.map((item, index) =>
       index === staffIndex ? data : item
     );
+
     this.setState({
-      staffs,
+      staffs
+    }, () => {
+      this.setState((prevState) => ({
+        disabledStaffs: {
+          ...prevState.disabledStaffs,
+          tallyClerk: prevState.staffs.filter(
+            (item) =>
+              !!item.staff &&
+              item.position === "Tally Clerk"
+          ),
+          casher: prevState.staffs.filter(
+            (item) =>
+              !!item.staff &&
+              item.position === "Casher"
+          ),
+        }
+      }))
     });
   };
   handleDelete = (staffIndex) => {
@@ -83,6 +124,8 @@ class ScheduleDay extends React.Component {
                       index={index}
                       onChange={this.handleChange}
                       onDelete={this.handleDelete}
+                      disabledStaffs={this.state.disabledStaffs.tallyClerk}
+                      staffList={this.state.staffList.tallyClerk}
                     />
                   )
               )}
@@ -107,27 +150,28 @@ class ScheduleDay extends React.Component {
                       index={index}
                       onChange={this.handleChange}
                       onDelete={this.handleDelete}
+                      disabledStaffs={this.state.disabledStaffs.casher}
+                      staffList={this.state.staffList.casher}
                     />
                   )
               )}
           </Panel>
         </PanelGroup>
         <div className="scheduleDay__btn">
-        <ButtonToolbar>
-          <Button appearance="primary" onClick={this.handleSubmit}>
-            Submit
-          </Button>
-          <Button
-            appearance="default"
-            onClick={() => {
-              this.props.onClose();
-            }}
-          >
-            Cancel
-          </Button>
-        </ButtonToolbar>
+          <ButtonToolbar>
+            <Button appearance="primary" onClick={this.handleSubmit}>
+              Submit
+            </Button>
+            <Button
+              appearance="default"
+              onClick={() => {
+                this.props.onClose();
+              }}
+            >
+              Cancel
+            </Button>
+          </ButtonToolbar>
         </div>
-        
       </div>
     );
   }
