@@ -57,6 +57,7 @@ class SchedulingForm extends React.Component {
             {!!schedule &&
               dates.map((item, index) => (
                 <ScheduleDrawer
+                  key={index}
                   date={item}
                   index={index}
                   startDate={startDate}
