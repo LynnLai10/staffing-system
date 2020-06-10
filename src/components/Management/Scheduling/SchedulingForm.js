@@ -2,9 +2,10 @@ import React from "react";
 import moment from "moment";
 import { connect } from "react-redux";
 import * as actions from "../../../actions/defaultSchedule";
-import ScheduleDrawer from "./ScheduleDrawer"
-import getDate from '../../../utils/getDate'
-import { Button, Alert } from "rsuite";
+import ScheduleDrawer from "./ScheduleDrawer";
+import SchedulePeriod from "../../Schedule/SchedulePeriod";
+import getDate from "../../../utils/getDate";
+import { Button, Loader } from "rsuite";
 
 class SchedulingForm extends React.Component {
   constructor(props) {
@@ -14,55 +15,103 @@ class SchedulingForm extends React.Component {
       dates: [],
       startDate: moment(),
       endDate: moment(),
+      schedule_No: "0",
     };
   }
 
-  componentDidMount() {
-    this.setState(getDate())
-    this.props.fecthDefaultSchedule("13")
-    this.props.fetchStaffList()
-  }
+  componentDidMount = () => {
+    this.setState(getDate(), () => {
+      this.props
+        .fecthDefaultSchedule(
+          this.props.isDefault ? "0" : this.state.schedule_No
+        )
+        .then(
+          () =>
+            !this.props.schedule &&
+            this.props.createDefaultSchedule(
+              this.props.isDefault ? "0" : this.state.schedule_No
+            )
+        );
+    });
+    this.props.fetchStaffList();
+  };
 
-  handleReset = () => {
-    
-    Alert.info('Pending...', 2000)
-    setTimeout(() => Alert.success("Success"), 2000);
+  handleClick = () => {
+    // this.setState({
+    //   loading: true,
+    // });
+    // setTimeout(() => {
+    //   this.props.fecthDefaultSchedule(this.props.isDefault? "0" : this.state.schedule_No);
+    // }, 90000)
+    // setTimeout(() => {
+    //   this.setState({
+    //     loading: false,
+    //   });
+    // }, 93000);
   };
   render() {
+    console.log(this.props.schedule);
+    const { isDefault, schedule } = this.props;
+    const {
+      startDate,
+      endDate,
+      dates,
+      days,
+      schedule_No,
+      loading,
+    } = this.state;
     return (
       <div className="scheduleForm__container">
         <div className="scheduleForm__panel">
-          {this.props.isDefault ? (
-            <h6>{" "}</h6>
-          ) : (
-            <h6>
-              Schedule Period: {this.state.startDate.format("DD/MM")} -{" "}
-              {this.state.endDate.format("DD/MM")}
-            </h6>
+          {!this.props.isDefault && (
+            <div className="scheduleForm_No">
+              <SchedulePeriod
+                isDefault={isDefault}
+                startDate={startDate}
+                endDate={endDate}
+              />
+              <h6>Schedule No: {schedule_No}</h6>
+            </div>
           )}
           <div className="scheduleForm__panelTitle">
-            {this.state.days.map((item) => (
+            {days.map((item) => (
               <h5 key={item}>{item}</h5>
             ))}
           </div>
+
           <div className="scheduleForm__panelItem">
-            {this.props.schedule && this.state.dates.map((item, index) => ( 
-              <ScheduleDrawer date={item} index={index} startDate={this.state.startDate} data={this.props.schedule.schedule_days[index]}/>
+            {!!schedule &&
+              dates.map((item, index) => (
+                <ScheduleDrawer
+                  date={item}
+                  index={index}
+                  startDate={startDate}
+                  data={schedule.schedule_days[index]}
+                />
               ))}
+            <div>
+              {!schedule && (
+                <Loader
+                  backdrop
+                  center
+                  size="md"
+                  content={`Creation in Process...`}
+                  vertical
+                />
+              )}
+            </div>
           </div>
-        </div>
-        <div className="scheduleForm__footer">
-          <Button appearance="default" size="lg" onClick={this.handleReset}>
-            Reset
-          </Button>
         </div>
       </div>
     );
   }
 }
-const mapStateToProps = ({ schedule }) => {
+const mapStateToProps = ({ schedule }, ownProps) => {
+  console.log(schedule);
   return {
-    schedule: schedule.schedule
+    schedule: ownProps.isDefault
+      ? schedule.schedule_default
+      : schedule.schedule_next,
   };
 };
 

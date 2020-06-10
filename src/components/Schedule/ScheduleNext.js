@@ -22,7 +22,6 @@ class ScheduleNext extends React.Component {
           />
           <p>Enable Default Setting</p>
         </div> 
-
         {!this.props.useDefault && <ScheduleForm isDefault={false} />}
       </div>
     );

@@ -27,7 +27,8 @@ class ScheduleDrawer extends React.Component {
     return (
       <div key={index}>
         <Button
-          appearance="primary"
+          appearance="default"
+          color={this.state.show ? "blue" : "cyan"}
           className="scheduleForm__btn"
           onClick={this.toggleDrawer}
         >

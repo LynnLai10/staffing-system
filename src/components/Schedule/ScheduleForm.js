@@ -13,7 +13,7 @@ class ScheduleForm extends React.Component {
       days: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
       dates: [],
       startDate: moment(),
-      endDate: moment(),
+      endDate: moment()
     };
   }
 
@@ -40,12 +40,11 @@ class ScheduleForm extends React.Component {
     return (
       <div className="scheduleForm__container">
         <div className="scheduleForm__panel">
-          <SchedulePeriod
+          {!this.props.isDefault && <SchedulePeriod
             isDefault={isDefault}
             startDate={startDate}
             endDate={endDate}
-          />
-
+          />}
           <div className="scheduleForm__panelTitle">
             {days.map((item) => (
               <h5 key={item}>{item}</h5>

@@ -6,12 +6,18 @@
 .scheduleForm__panel {
     width: 64.5rem;
     margin: auto 1rem;
-    margin-top: -2.5rem;
+    // margin-top: -2.5rem;
 }
 
 .scheduleForm__panel h6 {
     display: inline-block;
     margin: 0 0 1rem 1rem;
+}
+
+.scheduleForm_No {
+    display: flex;
+    justify-content: space-between;
+    padding-right: 2rem;
 }
 
 .scheduleForm__panelTitle {

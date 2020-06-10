@@ -14,5 +14,6 @@ export default () => {
     dates,
     startDate,
     endDate: date,
+    schedule_No: Math.round(moment().isoWeek()/2)+1 
   };
 };

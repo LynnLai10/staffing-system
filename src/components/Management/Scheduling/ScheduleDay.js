@@ -112,7 +112,7 @@ class ScheduleDay extends React.Component {
               )}
           </Panel>
         </PanelGroup>
-        <div className="scheduleDay_btn">
+        <div className="scheduleDay__btn">
         <ButtonToolbar>
           <Button appearance="primary" onClick={this.handleSubmit}>
             Submit
@@ -133,11 +133,4 @@ class ScheduleDay extends React.Component {
   }
 }
 
-const mapStateToProps = ({ schedule }, ownProps) => {
-  return {
-    schedule_staffs:
-      schedule.schedule.schedule_days[ownProps.index].schedule_staffs,
-  };
-};
-
-export default connect(mapStateToProps, actions)(ScheduleDay);
+export default connect(null, actions)(ScheduleDay);

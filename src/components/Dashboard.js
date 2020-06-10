@@ -3,7 +3,7 @@ import { Router, Route, Switch } from "react-router-dom";
 import { connect } from "react-redux";
 import * as actions from "../actions/users";
 import history from '../history'
-import { Container, Sidebar, Content, Footer, Panel } from "rsuite";
+import { Container, Sidebar, Content, Footer, Panel, Divider } from "rsuite";
 import SidebarNav from "./SidebarNav";
 import Header from "./Header";
 import MyFooter from "./MyFooter";
@@ -85,6 +85,7 @@ class Dashboard extends React.Component {
                       component={ChangePassword}
                     />
                   </Switch>
+                  <Divider />
                 </Panel>
               </div>
             </Content>

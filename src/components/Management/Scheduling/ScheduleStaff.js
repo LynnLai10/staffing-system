@@ -8,10 +8,11 @@ class ScheduleStaff extends React.Component {
     this.props.onDelete(this.props.index);
   };
   handleChange_staff = (value) => {
+    
     this.props.onChange({
       ...this.props.item,
       staff: {
-        employeeId: value
+        employeeId: value ? value : ""
       }
     }, this.props.index);
   };
