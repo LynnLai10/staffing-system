@@ -7,7 +7,7 @@ const getSchema = (i, schedule_No, employeeId, position, interval_No) => {
     mutation {
       createSchedule_Staff(
         data: {
-          day_No: "${schedule_No}-${i}"
+          day_No: "${schedule_No}_${i}"
           schedule_No: "${schedule_No}"
           position: "${position}"
           interval_No: "${interval_No}"
@@ -22,6 +22,7 @@ const getSchema = (i, schedule_No, employeeId, position, interval_No) => {
 };
 
 export const fecthDefaultSchedule = (schedule_No) => async (dispatch) => {
+  console.log("fetch schedule request")
   const schema = gql`
     query {
       schedule(schedule_No: "${schedule_No}") {
@@ -37,6 +38,7 @@ export const fecthDefaultSchedule = (schedule_No) => async (dispatch) => {
             position
             staff {
               employeeId
+              name
             }
           }
         }
@@ -45,10 +47,13 @@ export const fecthDefaultSchedule = (schedule_No) => async (dispatch) => {
   `;
   const res = await client(null).query({ query: schema });
   if (res) {
-    dispatch({ type: FETCH_DEFAULT_SCHEDULE, payload: {
-      isDefault: schedule_No === "0" ? true : false,
-      schedule: res.data.schedule
-    } });
+    dispatch({
+      type: FETCH_DEFAULT_SCHEDULE,
+      payload: {
+        isDefault: schedule_No === "0" ? true : false,
+        schedule: res.data.schedule,
+      },
+    });
   }
 };
 
@@ -67,14 +72,11 @@ export const fetchStaffList = () => async (dispatch) => {
   dispatch({ type: FETCH_STAFFLIST, payload: res.data.users });
 };
 
-
 export const createDefaultSchedule = (schedule_No) => async (dispatch) => {
   //fetch default schedule
   const schema_defaultSchedule = gql`
     query {
-      schedule (
-        schedule_No: "0"
-      ){
+      schedule(schedule_No: "0") {
         schedule_No
         schedule_days {
           day_No
@@ -91,7 +93,9 @@ export const createDefaultSchedule = (schedule_No) => async (dispatch) => {
       }
     }
   `;
-  const defaultData = await client(null).query({ query: schema_defaultSchedule });
+  const defaultData = await client(null).query({
+    query: schema_defaultSchedule,
+  });
   const schema_createSchedule = gql`
     mutation {
       createSchedule(
@@ -103,28 +107,39 @@ export const createDefaultSchedule = (schedule_No) => async (dispatch) => {
   `;
   await client(null).mutate({ mutation: schema_createSchedule });
   //create schedule day
-  const schema_createSchedule_Day = gql`
+  for (let i = 0; i < 14; i++) {
+    const schema_createSchedule_Day = gql`
     mutation {
       createSchedule_Day(
         schedule_No: "${schedule_No}"
+        day_No: "${schedule_No}_${i}"
       ){
         id
       }
     }
   `;
-  await client(null).mutate({ mutation: schema_createSchedule_Day });
-  
+    await client(null).mutate({ mutation: schema_createSchedule_Day });
+  }
+
   if (defaultData.data.schedule) {
-    const { schedule_days } = defaultData.data.schedule
+    const { schedule_days } = defaultData.data.schedule;
     for (let i = 0; i < 14; i++) {
       for (let j = 0; j < schedule_days[i].schedule_staffs.length; j++) {
-        const { staff, position, schedule_interval } = schedule_days[i].schedule_staffs[j]
-        const employeeId = staff ? staff.employeeId : ""
-        getSchema(i, schedule_No, employeeId, position, schedule_interval.interval_No);
+        const { staff, position, schedule_interval } = schedule_days[
+          i
+        ].schedule_staffs[j];
+        const employeeId = staff ? staff.employeeId : "";
+        getSchema(
+          i,
+          schedule_No,
+          employeeId,
+          position,
+          schedule_interval.interval_No
+        );
       }
     }
   }
-  
+
   const schema = gql`
     query {
       schedule(schedule_No: "${schedule_No}") {
@@ -148,10 +163,13 @@ export const createDefaultSchedule = (schedule_No) => async (dispatch) => {
   `;
   const res = await client(null).query({ query: schema });
   if (res) {
-    dispatch({ type: FETCH_DEFAULT_SCHEDULE, payload: {
-      isDefault: schedule_No === "0" ? true : false,
-      schedule: res.data.schedule
-    } });
+    dispatch({
+      type: FETCH_DEFAULT_SCHEDULE,
+      payload: {
+        isDefault: schedule_No === "0" ? true : false,
+        schedule: res.data.schedule,
+      },
+    });
   }
 };
 

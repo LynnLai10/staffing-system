@@ -1,20 +1,36 @@
 import React from "react";
 import { connect } from "react-redux";
 import * as actions from "../../../actions/defaultSchedule";
-import SchedulingForm from "./SchedulingForm";
 import PanelNav from "../../PanelNav";
+import SchedulingForm from "./SchedulingForm";
+import SchedulingList from "./SchedulingList";
 import { Divider } from "rsuite";
 
 class SchedulingDefault extends React.Component {
+  componentDidMount = () => {
+    this.props
+      .fecthDefaultSchedule("0")
+      .then(
+        () =>
+          !this.props.schedule && this.props.createDefaultSchedule("0")
+      );
+  };
   render() {
     return (
       <div>
         <PanelNav activeKey="default" path="management/scheduling" />
-        <SchedulingForm isDefault />
+        {Object.keys(this.props.schedule).length !== 0 && <SchedulingForm isDefault />}
         <Divider />
+        {this.props.schedule && <SchedulingList isDefault />}
       </div>
     );
   }
 }
 
-export default connect(null, actions)(SchedulingDefault);
+const mapStateToProps = ({ schedule }, ownProps) => {
+  return {
+    schedule: schedule.schedule_default,
+  };
+};
+
+export default connect(mapStateToProps, actions)(SchedulingDefault);

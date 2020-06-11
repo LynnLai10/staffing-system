@@ -38,7 +38,7 @@ export default function (state = initialState, action) {
         },
       };
     case UPDATE_STAFFS:
-      const isDefault = action.payload.day_No.split("-")[0] === "0";
+      const isDefault = action.payload.day_No.split("_")[0] === "0";
       const data = isDefault ? state.schedule_default : state.schedule_next;
       const schedule_days_updateStaff = data.schedule_days.map((item) => {
         if (item.day_No === action.payload.day_No) {
@@ -49,6 +49,7 @@ export default function (state = initialState, action) {
         }
         return item;
       });
+      console.log(data, action.payload.day_No, schedule_days_updateStaff)
       return isDefault
         ? {
             ...state,

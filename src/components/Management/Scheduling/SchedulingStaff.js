@@ -3,16 +3,17 @@ import { connect } from "react-redux";
 import * as actions from "../../../actions/schedule";
 import { IconButton, Icon, InputNumber, SelectPicker } from "rsuite";
 
-class ScheduleStaff extends React.Component {
+class SchedulingStaff extends React.Component {
   handleDelete = () => {
     this.props.onDelete(this.props.index);
   };
   handleChange_staff = (value) => {
-    
+    const staff = this.props.staffList.find(item => item.value === value)
     this.props.onChange({
       ...this.props.item,
       staff: {
-        employeeId: value ? value : ""
+        employeeId: value ? value : "",
+        name: staff.label
       }
     }, this.props.index);
   };
@@ -68,6 +69,8 @@ class ScheduleStaff extends React.Component {
         />
         <IconButton
           size="xs"
+          appearance="subtle"
+          circle
           icon={<Icon icon="minus-circle" />}
           onClick={this.handleDelete}
         />
@@ -81,4 +84,4 @@ const mapStateToProps = (state, ownProps) => {
     staffList: ownProps.item.position === "Tally Clerk" ? tallyClerk : casher
   };
 };
-export default connect(mapStateToProps, actions)(ScheduleStaff);
+export default connect(mapStateToProps, actions)(SchedulingStaff);

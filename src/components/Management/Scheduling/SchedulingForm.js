@@ -2,7 +2,7 @@ import React from "react";
 import moment from "moment";
 import { connect } from "react-redux";
 import * as actions from "../../../actions/defaultSchedule";
-import ScheduleDrawer from "./ScheduleDrawer";
+import SchedulingDrawer from "./SchedulingDrawer";
 import SchedulePeriod from "../../Schedule/SchedulePeriod";
 import getDate from "../../../utils/getDate";
 import { Loader } from "rsuite";
@@ -20,15 +20,7 @@ class SchedulingForm extends React.Component {
   }
 
   componentDidMount = () => {
-    this.setState(getDate(this.props.isDefault), () => {
-      this.props
-        .fecthDefaultSchedule(this.state.schedule_No)
-        .then(
-          () =>
-            !this.props.schedule &&
-            this.props.createDefaultSchedule(this.state.schedule_No)
-        );
-    });
+    this.setState(getDate(this.props.isDefault));
     this.props.fetchStaffList();
   };
   render() {
@@ -40,7 +32,7 @@ class SchedulingForm extends React.Component {
           {!this.props.isDefault && (
             <div className="scheduleForm_No">
               <SchedulePeriod
-                isDefault={isDefault}
+                isDefault={isDefault} 
                 startDate={startDate}
                 endDate={endDate}
               />
@@ -56,12 +48,12 @@ class SchedulingForm extends React.Component {
           <div className="scheduleForm__panelItem">
             {!!schedule &&
               dates.map((item, index) => (
-                <ScheduleDrawer
+                <SchedulingDrawer
                   key={index}
                   date={item}
                   index={index}
                   startDate={startDate}
-                  data={schedule.schedule_days[index]}
+                  data={schedule && schedule.schedule_days[index]}
                   staffList={staffList}
                 />
               ))}

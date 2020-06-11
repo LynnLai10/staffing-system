@@ -1,7 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
 import * as actions from "../../../actions/schedule";
-import ScheduleStaff from "./ScheduleStaff";
+import SchedulingStaff from "./SchedulingStaff";
 
 import {
   Panel,
@@ -12,7 +12,7 @@ import {
   Icon,
 } from "rsuite";
 
-class ScheduleDay extends React.Component {
+class SchedulingDay extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -58,6 +58,7 @@ class ScheduleDay extends React.Component {
       },
       staff: {
         employeeId: "",
+        name: "-"
       },
     };
     this.setState((prevState) => ({
@@ -117,7 +118,7 @@ class ScheduleDay extends React.Component {
               this.state.staffs.map(
                 (item, index) =>
                   item.position === "Tally Clerk" && (
-                    <ScheduleStaff
+                    <SchedulingStaff
                       item={item}
                       day_No={this.props.data.day_No}
                       key={index}
@@ -143,7 +144,7 @@ class ScheduleDay extends React.Component {
               this.state.staffs.map(
                 (item, index) =>
                   item.position === "Casher" && (
-                    <ScheduleStaff
+                    <SchedulingStaff
                       item={item}
                       day_No={this.props.data.day_No}
                       key={index}
@@ -177,4 +178,4 @@ class ScheduleDay extends React.Component {
   }
 }
 
-export default connect(null, actions)(ScheduleDay);
+export default connect(null, actions)(SchedulingDay);

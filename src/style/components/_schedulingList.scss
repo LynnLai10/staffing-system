@@ -1,0 +1,25 @@
+.scheduleList__panel {
+  display: flex;
+  align-items: center;
+}
+
+.scheduleList__panel__day {
+  text-align: center;
+  width: 5rem;
+  margin: auto 2rem;
+  padding-right: 1.5rem;
+  border-right: solid 0.2rem;
+}
+
+.scheduleList__panel__staff {
+  width: 9rem;
+  text-align: center;
+  padding: 0.5rem 1rem
+}
+
+.scheduleList__panel__staff :last-child {
+  border-top: solid 0.2rem;
+  margin-top: 0;
+}
+
+

@@ -1,9 +1,9 @@
 import React from "react";
 import moment from "moment";
-import ScheduleDay from "./ScheduleDay";
+import SchedulingDay from "./SchedulingDay";
 import { Drawer, Button } from "rsuite";
 
-class ScheduleDrawer extends React.Component {
+class SchedulingDrawer extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -53,7 +53,7 @@ class ScheduleDrawer extends React.Component {
           </Drawer.Header>
           <Drawer.Body>
             {this.state.show && (
-              <ScheduleDay
+              <SchedulingDay
                 index={index}
                 data={data}
                 onClose={this.close}
@@ -66,4 +66,4 @@ class ScheduleDrawer extends React.Component {
     );
   }
 }
-export default ScheduleDrawer;
+export default SchedulingDrawer;
