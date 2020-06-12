@@ -44,7 +44,7 @@ export default function (state = initialState, action) {
         if (item.day_No === action.payload.day_No) {
           return {
             ...item,
-            schedule_staffs: action.payload.staffs.concat(),
+            schedule_staffs: action.payload.staffs,
           };
         }
         return item;

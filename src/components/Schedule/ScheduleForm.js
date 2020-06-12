@@ -4,7 +4,7 @@ import { connect } from "react-redux";
 import * as actions from "../../actions/freetime";
 import getDate from "../../utils/getDate";
 import SchedulePeriod from "./SchedulePeriod";
-import { Button, Alert } from "rsuite";
+import { Button } from "rsuite";
 
 class ScheduleForm extends React.Component {
   constructor(props) {
@@ -13,27 +13,31 @@ class ScheduleForm extends React.Component {
       days: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
       dates: [],
       startDate: moment(),
-      endDate: moment()
+      endDate: moment(),
+      schedule_No: "0"
     };
   }
 
   componentDidMount() {
     this.setState(getDate(this.props.isDefault));
-    this.props.fetchFreetime();
   }
 
   handleClick = (index) => {
-    this.props.changeFreetime(this.props.isDefault, index, this.props.freetime);
+    this.props.updateFreetime({
+      ...this.props.freetime[index],
+      availability: this.props.freetime[index].availability === "no" ? "full" : "no"
+    });
   };
-  handleSubmit = () => {
-    this.props.updateFreetime(this.props.isDefault, this.props.freetime);
-    Alert.success("Success");
-  };
-  handleReset = () => {
-    this.props.resetFreetime(this.props.isDefault);
-    Alert.info("Pending...", 2000);
-    setTimeout(() => Alert.success("Success"), 2000);
-  };
+  // handleSubmit = () => {
+  //   this.props.updateFreetime(this.props.isDefault, this.props.freetime);
+  //   Alert.success("Success");
+  // };
+  // handleReset = () => {
+  //   this.props.resetFreetime(this.props.isDefault);
+  //   Alert.info("Pending...", 2000);
+  //   setTimeout(() => Alert.success("Success"), 2000);
+  // };
+  
   render() {
     const { isDefault, freetime } = this.props;
     const { startDate, endDate, dates, days } = this.state;
@@ -54,7 +58,7 @@ class ScheduleForm extends React.Component {
             {freetime &&
               freetime.map((item, index) => (
                 <Button
-                  appearance={item ? "primary" : "ghost"}
+                  appearance={item.availability === "full" ? "primary" : "ghost"}
                   className="scheduleForm__btn"
                   key={index}
                   onClick={() => this.handleClick(index)}
@@ -64,23 +68,24 @@ class ScheduleForm extends React.Component {
               ))}
           </div>
         </div>
-        <div className="scheduleForm__footer">
-          <Button appearance="primary" size="lg" onClick={this.handleSubmit}>
-            Save
-          </Button>
-          <Button appearance="default" size="lg" onClick={this.handleReset}>
-            Reset
-          </Button>
-        </div>
       </div>
     );
   }
 }
 const mapStateToProps = ({ user }, ownProps) => {
-  const { freetime_next, freetime_default } = user.schedule;
+  const { freetime_next, freetime_default } = user;
   return {
     freetime: ownProps.isDefault ? freetime_default : freetime_next,
   };
 };
 
 export default connect(mapStateToProps, actions)(ScheduleForm);
+
+// <div className="scheduleForm__footer">
+//   <Button appearance="primary" size="lg" onClick={this.handleSubmit}>
+//     Save
+//   </Button>
+//   <Button appearance="default" size="lg" onClick={this.handleReset}>
+//     Reset
+//   </Button>
+// </div>

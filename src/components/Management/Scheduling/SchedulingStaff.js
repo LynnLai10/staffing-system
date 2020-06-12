@@ -13,7 +13,7 @@ class SchedulingStaff extends React.Component {
       ...this.props.item,
       staff: {
         employeeId: value ? value : "",
-        name: staff.label
+        name: staff ? staff.label : ""
       }
     }, this.props.index);
   };

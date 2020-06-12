@@ -2,7 +2,7 @@ import client from "../utils/getClient";
 import { gql } from "apollo-boost";
 import { FETCH_DEFAULT_SCHEDULE, FETCH_STAFFLIST } from "./types";
 
-const getSchema = (i, schedule_No, employeeId, position, interval_No) => {
+const schema_createSchedule_Staff = (i, schedule_No, employeeId, position, interval_No) => {
   const schema = gql`
     mutation {
       createSchedule_Staff(
@@ -20,6 +20,20 @@ const getSchema = (i, schedule_No, employeeId, position, interval_No) => {
   `;
   client(null).mutate({ mutation: schema });
 };
+
+const schema_createSchedule_Day = (i, schedule_No) => {
+  const schema = gql`
+      mutation {
+        createSchedule_Day(
+          schedule_No: "${schedule_No}"
+          day_No: "${schedule_No}_${i}"
+        ){
+          id
+        }
+      }
+  `;
+    client(null).mutate({ mutation: schema })
+}
 
 export const fecthDefaultSchedule = (schedule_No) => async (dispatch) => {
   console.log("fetch schedule request")
@@ -76,7 +90,9 @@ export const createDefaultSchedule = (schedule_No) => async (dispatch) => {
   //fetch default schedule
   const schema_defaultSchedule = gql`
     query {
-      schedule(schedule_No: "0") {
+      schedule(
+        schedule_No: "0"
+        ) {
         schedule_No
         schedule_days {
           day_No
@@ -108,17 +124,7 @@ export const createDefaultSchedule = (schedule_No) => async (dispatch) => {
   await client(null).mutate({ mutation: schema_createSchedule });
   //create schedule day
   for (let i = 0; i < 14; i++) {
-    const schema_createSchedule_Day = gql`
-    mutation {
-      createSchedule_Day(
-        schedule_No: "${schedule_No}"
-        day_No: "${schedule_No}_${i}"
-      ){
-        id
-      }
-    }
-  `;
-    await client(null).mutate({ mutation: schema_createSchedule_Day });
+    await schema_createSchedule_Day(i, schedule_No)
   }
 
   if (defaultData.data.schedule) {
@@ -129,7 +135,7 @@ export const createDefaultSchedule = (schedule_No) => async (dispatch) => {
           i
         ].schedule_staffs[j];
         const employeeId = staff ? staff.employeeId : "";
-        getSchema(
+        schema_createSchedule_Staff(
           i,
           schedule_No,
           employeeId,
@@ -138,38 +144,6 @@ export const createDefaultSchedule = (schedule_No) => async (dispatch) => {
         );
       }
     }
-  }
-
-  const schema = gql`
-    query {
-      schedule(schedule_No: "${schedule_No}") {
-        schedule_No
-        schedule_days {
-          day_No
-          schedule_staffs {
-            id
-            schedule_interval {
-              start
-              end
-            }
-            position
-            staff {
-              employeeId
-            }
-          }
-        }
-      }
-    }
-  `;
-  const res = await client(null).query({ query: schema });
-  if (res) {
-    dispatch({
-      type: FETCH_DEFAULT_SCHEDULE,
-      payload: {
-        isDefault: schedule_No === "0" ? true : false,
-        schedule: res.data.schedule,
-      },
-    });
   }
 };
 

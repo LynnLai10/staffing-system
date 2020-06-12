@@ -5,7 +5,7 @@ import * as actions from "../../../actions/defaultSchedule";
 import SchedulingDrawer from "./SchedulingDrawer";
 import SchedulePeriod from "../../Schedule/SchedulePeriod";
 import getDate from "../../../utils/getDate";
-import { Loader } from "rsuite";
+
 
 class SchedulingForm extends React.Component {
   constructor(props) {
@@ -57,17 +57,7 @@ class SchedulingForm extends React.Component {
                   staffList={staffList}
                 />
               ))}
-            <div>
-              {!schedule && (
-                <Loader
-                  backdrop
-                  center
-                  size="md"
-                  content={`Creation in Process...`}
-                  vertical
-                />
-              )}
-            </div>
+            
           </div>
         </div>
       </div>

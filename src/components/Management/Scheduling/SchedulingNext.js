@@ -5,25 +5,46 @@ import getDate from "../../../utils/getDate";
 import PanelNav from "../../PanelNav";
 import SchedulingForm from "./SchedulingForm";
 import SchedulingList from "./SchedulingList";
-import { Divider } from "rsuite";
+import { Divider, Loader } from "rsuite";
+import isEmpty from "../../../utils/isEmpty";
 
 class SchedulingNext extends React.Component {
+  constructor(props) {
+    super(props) 
+    this.empty = isEmpty(this.props.schedule);
+  }
   componentDidMount = () => {
     const schedule_No = getDate(false).schedule_No;
     this.props
       .fecthDefaultSchedule(schedule_No)
       .then(
         () =>
-          !this.props.schedule && this.props.createDefaultSchedule(schedule_No)
+        (this.empty || this.props.schedule.length < 14) &&
+          this.props
+            .createDefaultSchedule(schedule_No)
+            .then(() => this.props.fecthDefaultSchedule(schedule_No))
       );
   };
   render() {
     return (
       <div>
         <PanelNav activeKey="next" path="management/scheduling" />
-        {Object.keys(this.props.schedule).length !== 0 && <SchedulingForm isDefault={false} />}
-        <Divider />
-        {this.props.schedule && <SchedulingList isDefault={false} />}
+        {!this.empty && (
+          <div>
+            <SchedulingForm isDefault={false} />
+            <Divider />
+            <SchedulingList isDefault={false} />
+          </div>
+        )}
+        {this.empty  && (
+          <Loader
+            backdrop
+            center
+            size="md"
+            content={`Creation in Process...`}
+            vertical
+          />
+        )}
       </div>
     );
   }
@@ -31,7 +52,7 @@ class SchedulingNext extends React.Component {
 
 const mapStateToProps = ({ schedule }) => {
   return {
-    schedule: schedule.schedule_next
+    schedule: schedule.schedule_next,
   };
 };
 

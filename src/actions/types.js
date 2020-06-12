@@ -9,7 +9,6 @@ export const DELETE_USER = "delete_user";
 //freetime
 export const FETCH_FREETIME = "fetch_freetime";
 export const UPDATE_FREETIME = "update_freetime";
-export const CHANGE_FREETIME = "change_freetime";
 export const CHANGE_USEDEFAULT = "change_usedefault";
 //schedule
 export const FETCH_DEFAULT_SCHEDULE = "fetch_default_schedule";

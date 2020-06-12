@@ -8,7 +8,7 @@ import {
   CREATE_USER,
   FETCH_USERS,
   UPDATE_USER,
-  DELETE_USER
+  DELETE_USER,
 } from "./types";
 
 export const fetchToken = () => async (dispatch) => {
@@ -47,7 +47,7 @@ export const login = ({ employeeId, password }) => async (dispatch) => {
 export const logout = () => async (dispatch) => {
   sessionStorage.clear();
   dispatch({ type: LOGOUT });
-  console.log('logout')
+  console.log("logout");
   history.push("/");
 };
 
@@ -61,6 +61,7 @@ export const fetchUser = () => async (dispatch) => {
         employeeId
         accountType
         sex
+        useDefaultFreetime
       }
     }
   `;
@@ -82,28 +83,17 @@ export const createUser = (formValue) => async (dispatch) => {
           accountType: "${accountType}"
           password: "${employeeId}"
         }
-      ) {
-        user {
-          employeeId
-          name
-          sex
-          accountType
-        }
-      }
+      ) 
     }
   `;
-  const freetimeSchema = gql`
-    mutation {
-      createFreetime (
-        employeeId: "${employeeId}"
-      ) {
-        id
-      }
-    }
-  `
   await client(token).mutate({ mutation: schema });
-  await client(null).mutate({ mutation: freetimeSchema })
-  dispatch({ type: CREATE_USER, payload: formValue });
+  dispatch({
+    type: CREATE_USER,
+    payload: {
+      ...formValue,
+      useDefaultFreetime: false
+    },
+  });
 };
 
 export const fetchUsers = () => async (dispatch) => {
@@ -115,6 +105,7 @@ export const fetchUsers = () => async (dispatch) => {
         name
         sex
         accountType
+        useDefaultFreetime
       }
     }
   `;
@@ -136,12 +127,15 @@ export const updateUser = (oldEmployeeId, formValue) => async (dispatch) => {
       accountType: "${accountType}"
     `;
   }
-  const combinedSchema =`
+  const combinedSchema =
+    `
     mutation {
       updateUser (
         employeeId: "${oldEmployeeId}"
         data: {
-          `+ data +`
+          ` +
+    data +
+    `
         }
       ) {
           employeeId
@@ -151,12 +145,13 @@ export const updateUser = (oldEmployeeId, formValue) => async (dispatch) => {
       }
     }
   `;
-  const schema = gql`${combinedSchema}`
+  const schema = gql`
+    ${combinedSchema}
+  `;
   await client(token).mutate({ mutation: schema });
   if (!formValue.hasOwnProperty("password")) {
     dispatch({ type: UPDATE_USER, payload: formValue });
   }
-  
 };
 
 export const deleteUser = (employeeId) => async (dispatch) => {

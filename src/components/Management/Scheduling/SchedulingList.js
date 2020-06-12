@@ -18,8 +18,6 @@ class SchedulingList extends React.Component {
     this.setState(getDate(this.props.isDefault));
   };
   render() {
-    console.log(this.props.schedule_days);
-
     return (
       <div>
         <PanelGroup accordion bordered>

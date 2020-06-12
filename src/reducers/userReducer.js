@@ -2,7 +2,6 @@ import {
   FETCH_USER,
   FETCH_FREETIME,
   UPDATE_FREETIME,
-  CHANGE_FREETIME,
   CHANGE_USEDEFAULT,
 } from "../actions/types";
 const initialState = {
@@ -11,12 +10,10 @@ const initialState = {
     sex: undefined,
     employeeId: undefined,
     accountType: undefined,
+    useDefaultFreetime: false,
   },
-  schedule: {
-    freetime_next: undefined,
-    freetime_default: undefined,
-    useDefault: undefined,
-  },
+  freetime_next: [],
+  freetime_default: [],
 };
 
 export default function (state = initialState, action) {
@@ -27,42 +24,41 @@ export default function (state = initialState, action) {
         user: action.payload,
       };
     case FETCH_FREETIME:
-      return {
-        ...state,
-        schedule: action.payload,
-      };
+      return action.payload.isDefault
+        ? {
+            ...state,
+            freetime_default: action.payload.freetime,
+          }
+        : {
+            ...state,
+            freetime_next: action.payload.freetime,
+          };
     case UPDATE_FREETIME:
-      return {
-        ...state,
-        schedule: {
-          ...state.schedule,
-          ...action.payload,
-        },
-      };
-    case CHANGE_FREETIME:
-      const { isDefault, index, freetime } = action.payload;
-      const newFreetime = {};
-      freetime[index] = !freetime[index];
-      if (isDefault) {
-        newFreetime.freetime_default = freetime.concat();
-      } else {
-        newFreetime.freetime_next = freetime.concat();
-      }
-      return {
-        ...state,
-        schedule: {
-          ...state.schedule,
-          ...newFreetime,
-        },
-      };
+      const isDefault = action.payload.day_No.split("_")[0] === "0";
+      const data = isDefault ? state.freetime_default : state.freetime_next;
+      const updatedFreetime = data.map((item) => {
+        if (item.day_No === action.payload.day_No) {
+          return action.payload;
+        }
+        return item;
+      });
+      return isDefault
+        ? {
+            ...state,
+            freetime_default: updatedFreetime,
+          }
+        : {
+            ...state,
+            freetime_next: updatedFreetime,
+          };
     case CHANGE_USEDEFAULT:
       return {
         ...state,
-        schedule: {
-          ...state.schedule,
-          useDefault: !state.schedule.useDefault
-        }
-      }
+        user: {
+          ...state.user,
+          useDefaultFreetime: action.payload,
+        },
+      };
     default:
       return state;
   }
