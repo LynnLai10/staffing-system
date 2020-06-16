@@ -1,6 +1,8 @@
 import React from "react";
 import { connect } from "react-redux";
 import * as actions from "../../actions/users";
+import { Mutation } from "@apollo/react-components";
+import { schema_changePassword } from "../../schema/user";
 import {
   Form,
   FormGroup,
@@ -10,6 +12,7 @@ import {
   ButtonToolbar,
   Button,
   Alert,
+  Loader
 } from "rsuite";
 const { StringType } = Schema.Types;
 
@@ -42,51 +45,78 @@ class ChangePassword extends React.Component {
     super(props);
     this.state = {
       formValue: {
+        currentPassword: "",
         password: "",
         verifyPassword: "",
       },
     };
   }
-  handleSubmit = () => {
-    const { formValue } = this.state;
-    this.props.updateUser(this.props.user.employeeId, formValue);
-    this.setState({
-      formValue: {
-        password: "",
-        verifyPassword: "",
-      },
-    });
-    Alert.success("Success");
+  handleSubmit = (changePassword) => {
+    const { formValue, formError } = this.state
+    if(JSON.stringify(formError) === '{}') {
+      changePassword({
+        variables: {
+          employeeId: this.props.user.employeeId,
+          currentPassword: formValue.currentPassword,
+          password: formValue.password,
+        },
+      }).then(() => {
+        this.setState({
+          formValue: {
+            currentPassword: "",
+            password: "",
+            verifyPassword: "",
+          },
+        });
+        Alert.success("Success");
+      });
+    }
   };
 
   render() {
     const { formValue } = this.state;
     return (
-      <div>
-        <Form
-          ref={(ref) => (this.form = ref)}
-          onChange={(formValue) => {
-            this.setState({ formValue });
-          }}
-          onCheck={(formError) => {
-            this.setState({ formError });
-          }}
-          formValue={formValue}
-          model={model}
-        >
-          <TextField name="password" label="Password" type="password" />
-          <TextField
-            name="verifyPassword"
-            label="Verify password"
-            type="password"
-          />
-          <ButtonToolbar>
-            <Button appearance="primary" onClick={this.handleSubmit}>
-              Submit
-            </Button>
-          </ButtonToolbar>
-        </Form>
-      </div>
+      <Mutation mutation={schema_changePassword}>
+        {(changePassword, { loading, error }) => (
+          <div>
+            <Form
+              ref={(ref) => (this.form = ref)}
+              onChange={(formValue) => {
+                this.setState({ formValue });
+              }}
+              onCheck={(formError) => {
+                this.setState({ formError });
+              }}
+              formValue={formValue}
+              model={model}
+              onSubmit={() => this.handleSubmit(changePassword)}
+            >
+            <TextField name="currentPassword" label="Current Password" type="password" />
+              <TextField name="password" label="Password" type="password" />
+              <TextField
+                name="verifyPassword"
+                label="Verify password"
+                type="password"
+              />
+              <ButtonToolbar>
+                <Button appearance="primary" type="submit">
+                  Submit
+                </Button>
+              </ButtonToolbar>
+            </Form>
+            {loading && (
+              <Loader
+                backdrop
+                center
+                size="md"
+                content={`In process...`}
+                vertical
+              />
+            )}
+            {error && Alert.error('Failed. Please try again.')}
+          </div>
+        )}
+      </Mutation>
     );
   }
 }

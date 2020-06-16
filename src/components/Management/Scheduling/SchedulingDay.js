@@ -1,8 +1,7 @@
 import React from "react";
-import { connect } from "react-redux";
-import * as actions from "../../../actions/schedule";
+import { Mutation } from "@apollo/react-components";
+import { schema_updateStaffs, schema_fetchSchedule } from "../../../schema/schedule";
 import SchedulingStaff from "./SchedulingStaff";
-
 import {
   Panel,
   PanelGroup,
@@ -10,6 +9,8 @@ import {
   Button,
   IconButton,
   Icon,
+  Alert,
+  Loader
 } from "rsuite";
 
 class SchedulingDay extends React.Component {
@@ -17,7 +18,7 @@ class SchedulingDay extends React.Component {
     super(props);
     this.state = {
       staffs: [],
-      staffList: {},
+      staffList: [],
       disabledStaffs: {
         tallyClerk: [],
         casher: [],
@@ -34,14 +35,10 @@ class SchedulingDay extends React.Component {
         this.setState((prevState) => ({
           disabledStaffs: {
             tallyClerk: prevState.staffs.filter(
-              (item) =>
-                !!item.staff &&
-                item.position === "Tally Clerk"
+              (item) => !!item.staff && item.position === "Tally Clerk"
             ),
             casher: prevState.staffs.filter(
-              (item) =>
-                !!item.staff &&
-                item.position === "Casher"
+              (item) => !!item.staff && item.position === "Casher"
             ),
           },
         }));
@@ -58,7 +55,7 @@ class SchedulingDay extends React.Component {
       },
       staff: {
         employeeId: "",
-        name: "-"
+        name: "-",
       },
     };
     this.setState((prevState) => ({
@@ -70,25 +67,24 @@ class SchedulingDay extends React.Component {
       index === staffIndex ? data : item
     );
 
-    this.setState({
-      staffs
-    }, () => {
-      this.setState((prevState) => ({
-        disabledStaffs: {
-          ...prevState.disabledStaffs,
-          tallyClerk: prevState.staffs.filter(
-            (item) =>
-              !!item.staff &&
-              item.position === "Tally Clerk"
-          ),
-          casher: prevState.staffs.filter(
-            (item) =>
-              !!item.staff &&
-              item.position === "Casher"
-          ),
-        }
-      }))
-    });
+    this.setState(
+      {
+        staffs,
+      },
+      () => {
+        this.setState((prevState) => ({
+          disabledStaffs: {
+            ...prevState.disabledStaffs,
+            tallyClerk: prevState.staffs.filter(
+              (item) => !!item.staff && item.position === "Tally Clerk"
+            ),
+            casher: prevState.staffs.filter(
+              (item) => !!item.staff && item.position === "Casher"
+            ),
+          },
+        }));
+      }
+    );
   };
   handleDelete = (staffIndex) => {
     this.setState({
@@ -96,86 +92,128 @@ class SchedulingDay extends React.Component {
     });
   };
 
-  handleSubmit = () => {
-    this.props.onClose();
-    this.props.updateStaffs(this.props.data, this.state.staffs);
+  formatStaff = (data) => {
+    return data.map((item) => ({
+      id: item.id,
+      day_No: this.props.data.day_No,
+      position: item.position,
+      employeeId: item.staff === null ? "" : item.staff.employeeId,
+      interval_No: `${item.schedule_interval.start}-${item.schedule_interval.end}`,
+    }));
+  };
+
+  handleSubmit = (updateStaffs) => {
+    const oldStaffs = this.formatStaff(this.props.data.schedule_staffs)
+    const newStaffs = this.formatStaff(this.state.staffs)
+    updateStaffs({
+      variables: {
+        oldStaffs,
+        newStaffs
+      },
+      refetchQueries: [{ query: schema_fetchSchedule }],
+    });
+    
   };
 
   render() {
+    const { staffs, staffList, disabledStaffs } = this.state;
     return (
-      <div>
-        <PanelGroup accordion bordered>
-          <Panel header="Tally Clerk" defaultExpanded>
-            <ButtonToolbar>
-              <IconButton
-                icon={<Icon icon="plus" />}
-                onClick={() => this.handleAddStaff(true)}
-              >
-                Staff
-              </IconButton>
-            </ButtonToolbar>
-            {this.state.staffs &&
-              this.state.staffs.map(
-                (item, index) =>
-                  item.position === "Tally Clerk" && (
-                    <SchedulingStaff
-                      item={item}
-                      day_No={this.props.data.day_No}
-                      key={index}
-                      index={index}
-                      onChange={this.handleChange}
-                      onDelete={this.handleDelete}
-                      disabledStaffs={this.state.disabledStaffs.tallyClerk}
-                      staffList={this.state.staffList.tallyClerk}
-                    />
-                  )
-              )}
-          </Panel>
-          <Panel header="Casher" defaultExpanded>
-            <ButtonToolbar>
-              <IconButton
-                icon={<Icon icon="plus" />}
-                onClick={() => this.handleAddStaff(false)}
-              >
-                Staff
-              </IconButton>
-            </ButtonToolbar>
-            {this.state.staffs &&
-              this.state.staffs.map(
-                (item, index) =>
-                  item.position === "Casher" && (
-                    <SchedulingStaff
-                      item={item}
-                      day_No={this.props.data.day_No}
-                      key={index}
-                      index={index}
-                      onChange={this.handleChange}
-                      onDelete={this.handleDelete}
-                      disabledStaffs={this.state.disabledStaffs.casher}
-                      staffList={this.state.staffList.casher}
-                    />
-                  )
-              )}
-          </Panel>
-        </PanelGroup>
-        <div className="scheduleDay__btn">
-          <ButtonToolbar>
-            <Button appearance="primary" onClick={this.handleSubmit}>
-              Submit
-            </Button>
-            <Button
-              appearance="default"
-              onClick={() => {
-                this.props.onClose();
-              }}
-            >
-              Cancel
-            </Button>
-          </ButtonToolbar>
-        </div>
-      </div>
+      <Mutation mutation={schema_updateStaffs} onCompleted={() => this.props.onClose()}>
+        {(updateStaffs, { loading, error }) => {
+          if (loading) {
+            return (
+              <Loader
+                backdrop
+                center
+                size="md"
+                content={`Saving...`}
+                vertical
+              />
+            );
+          }
+          if (error) {
+            return Alert.error("Failed. Please try again.");
+          }
+          return (
+            <div>
+              <PanelGroup accordion bordered>
+                <Panel header="Tally Clerk" defaultExpanded>
+                  <ButtonToolbar>
+                    <IconButton
+                      icon={<Icon icon="plus" />}
+                      onClick={() => this.handleAddStaff(true)}
+                    >
+                      Staff
+                    </IconButton>
+                  </ButtonToolbar>
+                  {
+                    staffs.map(
+                      (item, index) =>
+                        item.position === "Tally Clerk" && (
+                          <SchedulingStaff
+                            item={item}
+                            day_No={this.props.data.day_No}
+                            key={index}
+                            index={index}
+                            onChange={this.handleChange}
+                            onDelete={this.handleDelete}
+                            disabledStaffs={disabledStaffs.tallyClerk}
+                            staffList={staffList.tallyClerk}
+                          />
+                        )
+                    )}
+                </Panel>
+                <Panel header="Casher" defaultExpanded>
+                  <ButtonToolbar>
+                    <IconButton
+                      icon={<Icon icon="plus" />}
+                      onClick={() => this.handleAddStaff(false)}
+                    >
+                      Staff
+                    </IconButton>
+                  </ButtonToolbar>
+                  {
+                    staffs.map(
+                      (item, index) =>
+                        item.position === "Casher" && (
+                          <SchedulingStaff
+                            item={item}
+                            day_No={this.props.data.day_No}
+                            key={index}
+                            index={index}
+                            onChange={this.handleChange}
+                            onDelete={this.handleDelete}
+                            disabledStaffs={disabledStaffs.casher}
+                            staffList={staffList.casher}
+                          />
+                        )
+                    )}
+                </Panel>
+              </PanelGroup>
+              <div className="scheduleDay__btn">
+                <ButtonToolbar>
+                  <Button
+                    appearance="primary"
+                    onClick={() => this.handleSubmit(updateStaffs)}
+                  >
+                    Submit
+                  </Button>
+                  <Button
+                    appearance="default"
+                    onClick={() => {
+                      this.props.onClose();
+                    }}
+                  >
+                    Cancel
+                  </Button>
+                </ButtonToolbar>
+              </div>
+            </div>
+          );
+        }}
+      </Mutation>
     );
   }
 }
 
-export default connect(null, actions)(SchedulingDay);
+export default SchedulingDay;

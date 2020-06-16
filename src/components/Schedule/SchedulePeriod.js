@@ -1,11 +1,12 @@
 import React from "react";
+import moment from "moment";
 
 class SchedulePeriod extends React.Component {
   render() {
     return (
       <h6>
-        Schedule Period: {this.props.startDate.format("DD/MM")} -{" "}
-        {this.props.endDate.format("DD/MM")}
+        Schedule Period: {moment(this.props.startDate).format("DD/MM")} -{" "}
+        {moment(this.props.endDate).format("DD/MM")}
       </h6>
     );
   }

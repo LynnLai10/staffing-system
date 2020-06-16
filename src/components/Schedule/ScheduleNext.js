@@ -1,55 +1,87 @@
 import React from "react";
 import { connect } from "react-redux";
-import * as actions from "../../actions/freetime";
+import * as actions from "../../actions/users";
+import { Query, Mutation } from "@apollo/react-components";
+import { schema_changeUseDefault } from "../../schema/freetime";
+import { schema_me } from "../../schema/user";
 import PanelNav from "../PanelNav";
 import ScheduleForm from "./ScheduleForm";
-import getDate from "../../utils/getDate";
 import { Toggle, Alert, Loader } from "rsuite";
 
 class ScheduleNext extends React.Component {
-  componentDidMount = () => {
-    const schedule_No = getDate(false).schedule_No;
-    this.props
-      .fetchFreetime(schedule_No)
-      .then(
-        () =>
-          this.props.freetime.length < 14 &&
-          this.props
-            .createFreetime(schedule_No)
-            .then(() => this.props.fetchFreetime(schedule_No))
-      );
+  constructor(props) {
+    super(props);
+    this.useDefaultFreetime = undefined;
+  }
+
+  handleToggle = (changeUseDefault, checked) => {
+    changeUseDefault({
+      variables: {
+        useDefaultFreetime: checked,
+      },
+    });
+    this.useDefaultFreetime = checked;
   };
-  handleToggle = () => {
-    this.props.changeUseDefault(
-      this.props.user.employeeId,
-      !this.props.user.useDefaultFreetime
+
+  renderToggleFreetime = (changeUseDefault, data) => {
+    return (
+      <div>
+        <div className="toggle">
+          <Toggle
+            checked={data.me.useDefaultFreetime}
+            onChange={(checked) => {
+              this.handleToggle(changeUseDefault, checked);
+            }}
+          />
+          <p>Use Default Setting</p>
+        </div>
+        {!data.me.useDefaultFreetime && (
+          <ScheduleForm isDefault={false} dates={this.props.dates} />
+        )}
+      </div>
     );
-    Alert.info("Pending...", 2000);
-    setTimeout(() => Alert.success("Success"), 2000);
   };
+
   render() {
     return (
       <div>
         <PanelNav activeKey={"next"} path={"schedule"} />
-        <div className="toggle">
-          <Toggle
-            checked={this.props.user.useDefaultFreetime}
-            onChange={this.handleToggle}
-          />
-          <p>Use Default Setting</p>
-        </div>
-        {!this.props.user.useDefaultFreetime && (
-          <ScheduleForm isDefault={false} />
-        )}
-        {this.props.freetime.length < 14 && (
-          <Loader
-            backdrop
-            center
-            size="md"
-            content={`Creation in Process...`}
-            vertical
-          />
-        )}
+        <Query query={schema_me}>
+          {({ loading, error, data }) => {
+            if (loading) {
+              return (
+                <Loader
+                  backdrop
+                  center
+                  size="md"
+                  content={`Loading...`}
+                  vertical
+                />
+              );
+            }
+            if (error) {
+              return Alert.error("Failed. Please try again.");
+            }
+            return (
+              <Mutation mutation={schema_changeUseDefault}>
+                {(changeUseDefault, { loading }) => {
+                  if (loading) {
+                    return (
+                      <Loader
+                        backdrop
+                        center
+                        size="md"
+                        content={`Loading...`}
+                        vertical
+                      />
+                    );
+                  }
+                  return this.renderToggleFreetime(changeUseDefault, data);
+                }}
+              </Mutation>
+            );
+          }}
+        </Query>
       </div>
     );
   }
@@ -58,7 +90,7 @@ class ScheduleNext extends React.Component {
 const mapStateToProps = ({ user }) => {
   return {
     user: user.user,
-    freetime: user.freetime_next,
+    dates: user.dates,
   };
 };
 

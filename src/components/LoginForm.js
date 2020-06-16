@@ -1,6 +1,8 @@
 import React from "react";
-import { connect } from 'react-redux'
-import * as actions from '../actions/users'
+import { connect } from "react-redux";
+import * as actions from "../actions/users";
+import { Mutation } from "@apollo/react-components";
+import { schema_login } from "../schema/user";
 import {
   Form,
   FormGroup,
@@ -9,6 +11,8 @@ import {
   Schema,
   Button,
   ButtonToolbar,
+  Loader,
+  Alert
 } from "rsuite";
 
 const { StringType } = Schema.Types;
@@ -38,38 +42,56 @@ class LoginForm extends React.Component {
         password: "",
       },
     };
-    this.handleSubmit = this.handleSubmit.bind(this);
   }
 
-  handleSubmit() {
-    const { formValue } = this.state;
-    this.props.login(formValue)
-  }
+  handleSubmit = (login) => {
+    login({
+      variables: this.state.formValue,
+    }).then((data) => {
+      this.props.login(data)
+    });
+
+  };
 
   render() {
     const { formValue } = this.state;
     return (
-      <Form
-        ref={(ref) => (this.form = ref)}
-        onChange={(formValue) => {
-          this.setState({ formValue });
-        }}
-        formValue={formValue}
-        model={model}
-        className="login__form"
-      >
-        <TextField name="employeeId" label="Employee ID" />
-        <TextField name="password" label="Password" type="password" />
-        <ButtonToolbar className="login__panel__btn">
-          <Button
-            appearance="primary"
-            type="submit"
-            onClick={this.handleSubmit}
-          >
-            Submit
-          </Button>
-        </ButtonToolbar>
-      </Form>
+      <Mutation mutation={schema_login}>
+        {(login, { loading, error }) => (
+          <div>
+            <Form
+              ref={(ref) => (this.form = ref)}
+              onChange={(formValue) => {
+                this.setState({ formValue });
+              }}
+              formValue={formValue}
+              model={model}
+              onSubmit={() => this.handleSubmit(login)}
+              className="login__form"
+            >
+              <TextField name="employeeId" label="Employee ID" />
+              <TextField name="password" label="Password" type="password" />
+              <ButtonToolbar className="login__panel__btn">
+                <Button appearance="primary" type="submit">
+                  Submit
+                </Button>
+              </ButtonToolbar>
+              <div>
+              {loading && (
+                <Loader
+                  backdrop
+                  center
+                  size="md"
+                  content={`Logging in ...`}
+                  vertical
+                />
+              )}
+              {error && Alert.error('Failed. Please try again.')}
+              </div>
+            </Form>
+          </div>
+        )}
+      </Mutation>
     );
   }
 }

@@ -20,9 +20,8 @@ class PanelNav extends React.Component {
     this.state = {
       active: this.props.activeKey
     };
-    this.handleSelect = this.handleSelect.bind(this);
   }
-  handleSelect(activeKey) {
+  handleSelect = (activeKey) => {
     this.setState({ active: activeKey });
   }
   render() {

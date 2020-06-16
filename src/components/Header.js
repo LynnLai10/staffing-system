@@ -15,7 +15,7 @@ class Header extends React.Component {
     Alert.success("Logout Successfully.");
   };
   render() {
-    console.log("header");
+    console.log("header",this.props.user);
     return (
       <div className="content-header">
         <div>

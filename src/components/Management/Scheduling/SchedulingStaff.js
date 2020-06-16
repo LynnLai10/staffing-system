@@ -1,6 +1,4 @@
 import React from "react";
-import { connect } from "react-redux";
-import * as actions from "../../../actions/schedule";
 import { IconButton, Icon, InputNumber, SelectPicker } from "rsuite";
 
 class SchedulingStaff extends React.Component {
@@ -36,6 +34,7 @@ class SchedulingStaff extends React.Component {
     }, this.props.index);
   };
   render() {
+    console.log(this.props)
     const { schedule_interval, staff } = this.props.item
     return (
       <div className="scheduleDay__staff">
@@ -78,10 +77,5 @@ class SchedulingStaff extends React.Component {
     );
   }
 }
-const mapStateToProps = (state, ownProps) => {
-  const { tallyClerk, casher } = state.schedule.staffList
-  return {
-    staffList: ownProps.item.position === "Tally Clerk" ? tallyClerk : casher
-  };
-};
-export default connect(mapStateToProps, actions)(SchedulingStaff);
+
+export default SchedulingStaff;

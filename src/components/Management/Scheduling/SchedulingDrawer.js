@@ -8,13 +8,14 @@ class SchedulingDrawer extends React.Component {
     super(props);
     this.state = {
       show: false,
-      date: moment(this.props.startDate)
+      date: moment(this.props.dates.startDate)
         .add(this.props.index, "day")
         .format("Do MMM"),
-      day: moment(this.props.startDate)
-        .add(this.props.index, "day")
-        .format("ddd"),
     };
+    this.isDefault = this.props.data.day_No.split('_')[0] === "0"
+    this.date = this.isDefault ? this.props.index + 1 : this.props.dates.dates[this.props.index]
+    this.day = this.props.index < 7 ? this.props.dates.days[this.props.index] : this.props.dates.days[this.props.index-7]
+    
   }
   close = () => {
     this.setState({
@@ -27,7 +28,7 @@ class SchedulingDrawer extends React.Component {
     });
   };
   render() {
-    const { index, date, data } = this.props;
+    const { index, data, staffList } = this.props;
     return (
       <div key={index}>
         <Button
@@ -36,7 +37,7 @@ class SchedulingDrawer extends React.Component {
           className="scheduleForm__btn"
           onClick={this.toggleDrawer}
         >
-          {date}
+          {this.date}
         </Button>
 
         <Drawer
@@ -47,8 +48,7 @@ class SchedulingDrawer extends React.Component {
         >
           <Drawer.Header>
             <Drawer.Title>
-              {index < 7 ? "First" : "Second"} Week: {this.state.day},{" "}
-              {this.state.date}
+              {index < 7 ? "First" : "Second"} Week: {this.day}, {this.isDefault ? `Day ${this.date}` : this.state.date}
             </Drawer.Title>
           </Drawer.Header>
           <Drawer.Body>
@@ -57,7 +57,7 @@ class SchedulingDrawer extends React.Component {
                 index={index}
                 data={data}
                 onClose={this.close}
-                staffList={this.props.staffList}
+                staffList={staffList}
               />
             )}
           </Drawer.Body>

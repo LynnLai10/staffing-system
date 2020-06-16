@@ -4,6 +4,9 @@ import {
   UPDATE_FREETIME,
   CHANGE_USEDEFAULT,
 } from "../actions/types";
+import getDate from "../utils/getDate";
+
+const dates = getDate()
 const initialState = {
   user: {
     name: undefined,
@@ -14,6 +17,10 @@ const initialState = {
   },
   freetime_next: [],
   freetime_default: [],
+  dates: {
+    ...dates,
+    days: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
+  },
 };
 
 export default function (state = initialState, action) {

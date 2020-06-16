@@ -1,6 +1,10 @@
 import React from "react";
-import { connect } from "react-redux";
-import * as actions from "../../../actions/users";
+import { Mutation } from "@apollo/react-components";
+import {
+  schema_createStaff,
+  schema_updateStaff,
+  schema_staffList,
+} from "../../../schema/user";
 import {
   Form,
   FormGroup,
@@ -12,9 +16,8 @@ import {
   Radio,
   RadioGroup,
   Schema,
-  Alert,
   IconButton,
-  Icon,
+  Icon
 } from "rsuite";
 
 const { StringType } = Schema.Types;
@@ -68,8 +71,6 @@ class StaffFormModal extends React.Component {
       delete this.props.data.password;
       this.setState({
         originalId: this.props.data.employeeId,
-      });
-      this.setState({
         formValue: this.props.data,
       });
     }
@@ -79,62 +80,90 @@ class StaffFormModal extends React.Component {
       formValue: value,
     });
   };
-  handleSubmit = () => {
-    const { formValue } = this.state;
-    this.props.isEdit
-      ? this.props.updateUser(this.state.originalId, formValue)
-      : this.props.createUser(formValue);
-      setTimeout(() => Alert.success("Success"), 2000);
+  handleSubmit = (handleMutation) => {
+    const { originalId, formValue } = this.state;
+    const variables = this.props.isEdit
+      ? {
+          ...formValue,
+          originalId: originalId,
+        }
+      : {
+          ...formValue,
+          password: formValue.employeeId,
+        };
+    handleMutation({
+      variables,
+      refetchQueries: [{ query: schema_staffList }],
+    });
   };
   render() {
+    const { isEdit } = this.props;
+    const { formValue, show } = this.state;
+    const schema = isEdit ? schema_updateStaff : schema_createStaff;
     return (
       <div>
-        <Modal show={this.state.show} onHide={this.close} size="xs">
-          <Modal.Header>
-            <Modal.Title>New Staff</Modal.Title>
-          </Modal.Header>
-          <Modal.Body>
-            <Form
-              fluid
-              ref={(ref) => (this.form = ref)}
-              onChange={this.handleChange}
-              formValue={this.state.formValue}
-              model={model}
-            >
-              <CustomField name="employeeId" label="Employee ID" />
-              <CustomField name="name" label="Name" />
-              <CustomField name="sex" label="Sex" accepter={RadioGroup} inline>
-                <Radio value={"Male"}>Male</Radio>
-                <Radio value={"Female"}>Female</Radio>
-              </CustomField>
-              <CustomField
-                name="accountType"
-                label="Account Type"
-                accepter={RadioGroup}
-                inline
-              >
-                <Radio value={"Admin"}>Admin</Radio>
-                <Radio value={"Staff"}>Staff</Radio>
-              </CustomField>
-            </Form>
-          </Modal.Body>
-          <Modal.Footer>
-            <Button
-              onClick={() => {
-                this.handleSubmit();
-                this.close();
-              }}
-              appearance="primary"
-            >
-              Confirm
-            </Button>
-            <Button onClick={this.close} appearance="subtle">
-              Cancel
-            </Button>
-          </Modal.Footer>
-        </Modal>
-
-        {this.props.isEdit ? (
+        <Mutation mutation={schema}>
+          {(handleMutation, { loading, error }) => {
+           
+            return (
+              <div>
+                {show && (
+                  <Modal show={show} onHide={this.close} size="xs">
+                    <Modal.Header>
+                      <Modal.Title>New Staff</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
+                      <Form
+                        fluid
+                        ref={(ref) => (this.form = ref)}
+                        onChange={this.handleChange}
+                        formValue={formValue}
+                        model={model}
+                      >
+                        <CustomField name="employeeId" label="Employee ID" />
+                        <CustomField name="name" label="Name" />
+                        <CustomField
+                          name="sex"
+                          label="Sex"
+                          accepter={RadioGroup}
+                          inline
+                        >
+                          <Radio value={"Male"}>Male</Radio>
+                          <Radio value={"Female"}>Female</Radio>
+                        </CustomField>
+                        <CustomField
+                          name="accountType"
+                          label="Account Type"
+                          accepter={RadioGroup}
+                          inline
+                        >
+                          <Radio value={"Admin"}>Admin</Radio>
+                          <Radio value={"Staff"}>Staff</Radio>
+                        </CustomField>
+                      </Form>
+                    </Modal.Body>
+                    <Modal.Footer>
+                      <Button
+                        appearance="primary"
+                        onClick={() => {
+                          this.handleSubmit(handleMutation);
+                          this.close();
+                        }}
+                        type="submit"
+                      >
+                        Confirm
+                      </Button>
+                      <Button onClick={this.close} appearance="subtle">
+                        Cancel
+                      </Button>
+                    </Modal.Footer>
+                  </Modal>
+                )}
+              </div>
+            );
+          }}
+        </Mutation>
+        {isEdit ? (
           <IconButton
             appearance="subtle"
             onClick={this.open}
@@ -151,4 +180,4 @@ class StaffFormModal extends React.Component {
   }
 }
 
-export default connect(null, actions)(StaffFormModal);
+export default StaffFormModal;
