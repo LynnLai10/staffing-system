@@ -17,7 +17,8 @@ import {
   RadioGroup,
   Schema,
   IconButton,
-  Icon
+  Icon,
+  Alert,
 } from "rsuite";
 
 const { StringType } = Schema.Types;
@@ -95,6 +96,7 @@ class StaffFormModal extends React.Component {
       variables,
       refetchQueries: [{ query: schema_staffList }],
     });
+    this.close()
   };
   render() {
     const { isEdit } = this.props;
@@ -102,9 +104,8 @@ class StaffFormModal extends React.Component {
     const schema = isEdit ? schema_updateStaff : schema_createStaff;
     return (
       <div>
-        <Mutation mutation={schema}>
-          {(handleMutation, { loading, error }) => {
-           
+        <Mutation mutation={schema} onCompleted={() => Alert.success("Success.")}>
+          {(handleMutation) => {
             return (
               <div>
                 {show && (
@@ -147,7 +148,6 @@ class StaffFormModal extends React.Component {
                         appearance="primary"
                         onClick={() => {
                           this.handleSubmit(handleMutation);
-                          this.close();
                         }}
                         type="submit"
                       >

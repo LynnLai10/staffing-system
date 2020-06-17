@@ -7,8 +7,8 @@ import { Container, Sidebar, Content, Footer, Panel, Divider } from "rsuite";
 import SidebarNav from "./SidebarNav";
 import Header from "./Header";
 import MyFooter from "./MyFooter";
-import ScheduleNext from "./Schedule/ScheduleNext";
-import ScheduleDefault from "./Schedule/ScheduleDefault";
+import FreetimeNext from "./Freetime/FreetimeNext";
+import FreetimeDefault from "./Freetime/FreetimeDefault";
 import Greens from "./CheckoutSystem/Greens";
 import MelonFruit from "./CheckoutSystem/MelonFruit";
 import Rice from "./CheckoutSystem/Rice";
@@ -42,11 +42,11 @@ class Dashboard extends React.Component {
                   <Switch>
                     <Route
                       path="/dashboard/schedule/next"
-                      component={ScheduleNext}
+                      component={FreetimeNext}
                     />
                     <Route
                       path="/dashboard/schedule/default"
-                      component={ScheduleDefault}
+                      component={FreetimeDefault}
                     />
                     <Route
                       path="/dashboard/checkoutSystem/greens"

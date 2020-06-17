@@ -1,6 +1,6 @@
 import moment from "moment";
 
-export default (isDefault) => {
+export default () => {
   const dates = [];
   const date =
     moment().isoWeek() % 2 === 0
@@ -14,6 +14,6 @@ export default (isDefault) => {
     dates,
     startDate,
     endDate: date,
-    schedule_No: isDefault ? "0" : `${Math.round(moment().isoWeek()/2)+1}` 
+    schedule_No: `${Math.round(moment().isoWeek()/2)+1}` 
   };
 };

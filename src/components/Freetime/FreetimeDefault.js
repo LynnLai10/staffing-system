@@ -1,15 +1,15 @@
 import React from "react";
 import { connect } from "react-redux";
 import PanelNav from "../PanelNav";
-import ScheduleForm from "./ScheduleForm";
+import FreetimeForm from "./FreetimeForm";
 
 
-class ScheduleDeafult extends React.Component {
+class FreetimeDeafult extends React.Component {
   render() {
     return (
       <div>
         <PanelNav activeKey={"default"} path={"schedule"} />
-        <ScheduleForm isDefault dates={this.props.dates} />
+        <FreetimeForm isDefault dates={this.props.dates} />
       </div>
     );
   }
@@ -21,4 +21,4 @@ const mapStateToProps = ({ user }) => {
   };
 };
 
-export default connect(mapStateToProps)(ScheduleDeafult);
+export default connect(mapStateToProps)(FreetimeDeafult);

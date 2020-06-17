@@ -1,14 +1,19 @@
 import React from "react";
 import { Mutation } from "@apollo/react-components";
-import { schema_deleteStaff, schema_staffList } from "../../../schema/user";
-import { Modal, Button, Icon, IconButton, Alert } from "rsuite";
+import {
+  schema_resetFreetimes,
+  schema_fetchFreetimes,
+} from "../../schema/freetime";
+import LoadingError from "../LoadingError";
+import { Modal, ButtonToolbar, Button, Icon, Alert } from "rsuite";
 
-class DeleteStaff extends React.Component {
+class FreetimeReset extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       show: false,
     };
+    this.schedule_No = this.props.isDefault ? "0" : this.props.schedule_No;
   }
   close = () => {
     this.setState({ show: false });
@@ -16,30 +21,35 @@ class DeleteStaff extends React.Component {
   open = () => {
     this.setState({ show: true });
   };
-  handleSubmit = (deleteStaff) => {
-    deleteStaff({
+  handleSubmit = (resetFreetime) => {
+    resetFreetime({
       variables: {
-        employeeId: this.props.data.employeeId,
+        schedule_No: this.schedule_No,
       },
-      refetchQueries: [{ query: schema_staffList }],
+      refetchQueries: [
+        {
+          query: schema_fetchFreetimes,
+          variables: { schedule_No: this.schedule_No },
+        },
+      ],
     });
   };
   render() {
     const { show } = this.state;
-    const { employeeId, name } = this.props.data;
+    const { isDefault } = this.props;
     return (
       <div>
-        <IconButton
-          appearance="subtle"
-          onClick={this.open}
-          icon={<Icon icon="trash" />}
-          className="staffList__btn"
-        />
+        <ButtonToolbar>
+          <Button appearance="ghost" onClick={this.open}>
+            Reset
+          </Button>
+        </ButtonToolbar>
+
         <Mutation
-          mutation={schema_deleteStaff}
+          mutation={schema_resetFreetimes}
           onCompleted={() => Alert.success("Success.")}
         >
-          {(deleteStaff) => (
+          {(resetFreetime, { loading, error }) => (
             <div>
               {show && (
                 <Modal
@@ -49,7 +59,7 @@ class DeleteStaff extends React.Component {
                   size="xs"
                 >
                   <Modal.Header>
-                    <Modal.Title>Delete Staff</Modal.Title>
+                    <Modal.Title>Reset Freetime</Modal.Title>
                   </Modal.Header>
                   <Modal.Body>
                     <Icon
@@ -59,25 +69,32 @@ class DeleteStaff extends React.Component {
                         fontSize: 24,
                       }}
                     />{" "}
-                    Are you sure you want to delete this staff: <br />{" "}
-                    {employeeId}-{name}?
+                    Are you sure you want to reset{" "}
+                    {isDefault
+                      ? "Default Freetime"
+                      : "the Freetime"}
+                    ?
                   </Modal.Body>
                   <Modal.Footer>
                     <Button
                       onClick={() => {
-                        this.handleSubmit(deleteStaff);
+                        this.handleSubmit(resetFreetime);
                         this.close();
                       }}
                       appearance="primary"
                     >
-                      Delete
+                      Reset
                     </Button>
-                    <Button onClick={this.close} appearance="subtle">
+                    <Button
+                      onClick={this.close}
+                      appearance="subtle"
+                    >
                       Cancel
                     </Button>
                   </Modal.Footer>
                 </Modal>
               )}
+              <LoadingError loading={loading} error={error} />
             </div>
           )}
         </Mutation>
@@ -86,16 +103,4 @@ class DeleteStaff extends React.Component {
   }
 }
 
-export default DeleteStaff;
-
-// update={(cache, { data: { deleteUser } }) => {
-//   let { users } = cache.readQuery({ query: schema_staffList });
-//   cache.writeQuery({
-//     query: schema_staffList,
-//     data: {
-//       users: users.filter(
-//         (item) => item.employeeId !== deleteUser.employeeId
-//       ),
-//     },
-//   });
-// }}
+export default FreetimeReset;

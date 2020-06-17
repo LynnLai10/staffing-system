@@ -11,6 +11,7 @@ export const schema_fetchFreetimes = gql`
     }
   }
 `;
+
 export const schema_createFreetimes = gql`
   mutation CreateFreetimes($schedule_No: String!) {
     createFreetimes(schedule_No: $schedule_No) {
@@ -30,19 +31,23 @@ export const schema_updateFreetime = gql`
   }
 `;
 
-export const schema_changeUseDefault = gql`
-mutation ChangeUseDefault ($useDefaultFreetime: Boolean!) {
-  updateUser (
-    data: {
-      useDefaultFreetime: $useDefaultFreetime
+export const schema_resetFreetimes = gql`
+  mutation ResetFreetime($schedule_No: String!) {
+    deleteFreetimes(schedule_No: $schedule_No) {
+      count
     }
-  ){
-    id
-    employeeId
-    name
-    sex
-    accountType
-    useDefaultFreetime
   }
-}
+`;
+
+export const schema_changeUseDefault = gql`
+  mutation ChangeUseDefault($useDefaultFreetime: Boolean!) {
+    updateUser(data: { useDefaultFreetime: $useDefaultFreetime }) {
+      id
+      employeeId
+      name
+      sex
+      accountType
+      useDefaultFreetime
+    }
+  }
 `;

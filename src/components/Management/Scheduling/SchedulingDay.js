@@ -1,6 +1,9 @@
 import React from "react";
 import { Mutation } from "@apollo/react-components";
-import { schema_updateStaffs, schema_fetchSchedule } from "../../../schema/schedule";
+import {
+  schema_updateStaffs,
+  schema_fetchSchedule,
+} from "../../../schema/schedule";
 import SchedulingStaff from "./SchedulingStaff";
 import {
   Panel,
@@ -10,7 +13,7 @@ import {
   IconButton,
   Icon,
   Alert,
-  Loader
+  Loader,
 } from "rsuite";
 
 class SchedulingDay extends React.Component {
@@ -24,6 +27,8 @@ class SchedulingDay extends React.Component {
         casher: [],
       },
     };
+    this.schedule_No = this.props.dates.schedule_No
+    this.isDefault = this.props.isDefault
   }
   componentDidMount() {
     this.setState(
@@ -94,8 +99,11 @@ class SchedulingDay extends React.Component {
 
   formatStaff = (data) => {
     return data.map((item) => ({
-      id: item.id,
-      day_No: this.props.data.day_No,
+      id: this.isDefault ? item.id : "",
+      day_No:
+      this.isDefault
+          ? this.props.data.day_No
+          : `${this.schedule_No}_${this.props.data.day_No.split("_")[1]}`,
       position: item.position,
       employeeId: item.staff === null ? "" : item.staff.employeeId,
       interval_No: `${item.schedule_interval.start}-${item.schedule_interval.end}`,
@@ -103,22 +111,34 @@ class SchedulingDay extends React.Component {
   };
 
   handleSubmit = (updateStaffs) => {
-    const oldStaffs = this.formatStaff(this.props.data.schedule_staffs)
-    const newStaffs = this.formatStaff(this.state.staffs)
+    const oldStaffs = this.isDefault ? this.formatStaff(this.props.data.schedule_staffs) : [];
+    const newStaffs = this.formatStaff(this.state.staffs);
+    console.log(oldStaffs, newStaffs)
     updateStaffs({
       variables: {
         oldStaffs,
-        newStaffs
+        newStaffs,
       },
-      refetchQueries: [{ query: schema_fetchSchedule }],
+      refetchQueries: [
+        { query: schema_fetchSchedule, variables: { schedule_No: "0" } },
+        {
+          query: schema_fetchSchedule,
+          variables: { schedule_No: this.schedule_No },
+        },
+      ],
     });
-    
   };
 
   render() {
     const { staffs, staffList, disabledStaffs } = this.state;
     return (
-      <Mutation mutation={schema_updateStaffs} onCompleted={() => this.props.onClose()}>
+      <Mutation
+        mutation={schema_updateStaffs}
+        onCompleted={() => {
+          this.props.onClose()
+          Alert.success("Success.")
+        }}
+      >
         {(updateStaffs, { loading, error }) => {
           if (loading) {
             return (
@@ -146,22 +166,21 @@ class SchedulingDay extends React.Component {
                       Staff
                     </IconButton>
                   </ButtonToolbar>
-                  {
-                    staffs.map(
-                      (item, index) =>
-                        item.position === "Tally Clerk" && (
-                          <SchedulingStaff
-                            item={item}
-                            day_No={this.props.data.day_No}
-                            key={index}
-                            index={index}
-                            onChange={this.handleChange}
-                            onDelete={this.handleDelete}
-                            disabledStaffs={disabledStaffs.tallyClerk}
-                            staffList={staffList.tallyClerk}
-                          />
-                        )
-                    )}
+                  {staffs.map(
+                    (item, index) =>
+                      item.position === "Tally Clerk" && (
+                        <SchedulingStaff
+                          item={item}
+                          day_No={this.props.data.day_No}
+                          key={index}
+                          index={index}
+                          onChange={this.handleChange}
+                          onDelete={this.handleDelete}
+                          disabledStaffs={disabledStaffs.tallyClerk}
+                          staffList={staffList.tallyClerk}
+                        />
+                      )
+                  )}
                 </Panel>
                 <Panel header="Casher" defaultExpanded>
                   <ButtonToolbar>
@@ -172,22 +191,21 @@ class SchedulingDay extends React.Component {
                       Staff
                     </IconButton>
                   </ButtonToolbar>
-                  {
-                    staffs.map(
-                      (item, index) =>
-                        item.position === "Casher" && (
-                          <SchedulingStaff
-                            item={item}
-                            day_No={this.props.data.day_No}
-                            key={index}
-                            index={index}
-                            onChange={this.handleChange}
-                            onDelete={this.handleDelete}
-                            disabledStaffs={disabledStaffs.casher}
-                            staffList={staffList.casher}
-                          />
-                        )
-                    )}
+                  {staffs.map(
+                    (item, index) =>
+                      item.position === "Casher" && (
+                        <SchedulingStaff
+                          item={item}
+                          day_No={this.props.data.day_No}
+                          key={index}
+                          index={index}
+                          onChange={this.handleChange}
+                          onDelete={this.handleDelete}
+                          disabledStaffs={disabledStaffs.casher}
+                          staffList={staffList.casher}
+                        />
+                      )
+                  )}
                 </Panel>
               </PanelGroup>
               <div className="scheduleDay__btn">

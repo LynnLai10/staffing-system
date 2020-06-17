@@ -5,10 +5,10 @@ import { Query, Mutation } from "@apollo/react-components";
 import { schema_changeUseDefault } from "../../schema/freetime";
 import { schema_me } from "../../schema/user";
 import PanelNav from "../PanelNav";
-import ScheduleForm from "./ScheduleForm";
+import FreetimeForm from "./FreetimeForm";
 import { Toggle, Alert, Loader } from "rsuite";
 
-class ScheduleNext extends React.Component {
+class FreetimeNext extends React.Component {
   constructor(props) {
     super(props);
     this.useDefaultFreetime = undefined;
@@ -36,7 +36,7 @@ class ScheduleNext extends React.Component {
           <p>Use Default Setting</p>
         </div>
         {!data.me.useDefaultFreetime && (
-          <ScheduleForm isDefault={false} dates={this.props.dates} />
+          <FreetimeForm isDefault={false} dates={this.props.dates} />
         )}
       </div>
     );
@@ -94,4 +94,4 @@ const mapStateToProps = ({ user }) => {
   };
 };
 
-export default connect(mapStateToProps, actions)(ScheduleNext);
+export default connect(mapStateToProps, actions)(FreetimeNext);

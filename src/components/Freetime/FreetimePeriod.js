@@ -1,7 +1,7 @@
 import React from "react";
 import moment from "moment";
 
-class SchedulePeriod extends React.Component {
+class FreetimePeriod extends React.Component {
   render() {
     return (
       <h6>
@@ -12,4 +12,4 @@ class SchedulePeriod extends React.Component {
   }
 }
 
-export default SchedulePeriod
+export default FreetimePeriod

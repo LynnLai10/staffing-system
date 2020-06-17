@@ -1,28 +1,60 @@
 import React from "react";
 import { connect } from "react-redux";
+import { Query } from "@apollo/react-components";
+import { schema_fetchSchedule } from "../../../schema/schedule";
 import PanelNav from "../../PanelNav";
 import SchedulingForm from "./SchedulingForm";
-// import isEmpty from "../../../utils/isEmpty";
+import SchedulingList from "./SchedulingList";
+import { Loader, Alert, Divider } from "rsuite";
 
 class SchedulingDefault extends React.Component {
-  // constructor(props) {
-  //   super(props)
-  //   this.empty = isEmpty(this.props.schedule);
-  // }
-  // componentDidMount = () => {
-  //   this.props
-  //     .fecthDefaultSchedule("0")
-  //     .then(
-  //       () =>
-  //         (this.empty || this.props.schedule.length < 14) &&
-  //         this.props.createDefaultSchedule("0").then(() => this.props.fecthDefaultSchedule("0"))
-  //     );
-  // };
   render() {
     return (
       <div>
         <PanelNav activeKey="default" path="management/scheduling" />
-        <SchedulingForm isDefault dates={this.props.dates}/>
+        <Query query={schema_fetchSchedule} variables={{ schedule_No: "0" }}>
+          {({ loading, error, data }) => {
+            if (loading) {
+              return (
+                <Loader
+                  backdrop
+                  center
+                  size="md"
+                  content={`Loading...`}
+                  vertical
+                />
+              );
+            }
+            if (error) {
+              return Alert.error("Failed. Please try again.");
+            }
+            return (
+              <div>
+                <SchedulingForm
+                  isDefault
+                  dates={this.props.dates}
+                  data={data.schedule.schedule_days}
+                />
+                <Divider />
+                <SchedulingList
+                  isDefault
+                  dates={this.props.dates}
+                  data={data.schedule.schedule_days}
+                />
+                {loading && (
+                  <Loader
+                    backdrop
+                    center
+                    size="md"
+                    content={`Pending...`}
+                    vertical
+                  />
+                )}
+                {error && Alert.error("Failed. Please try again.")}
+              </div>
+            );
+          }}
+        </Query>
       </div>
     );
   }

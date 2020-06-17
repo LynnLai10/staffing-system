@@ -7,11 +7,12 @@ import {
   schema_createFreetimes,
   schema_fetchFreetimes,
 } from "../../schema/freetime";
-import SchedulePeriod from "./SchedulePeriod";
-import { Button, Loader, Alert } from "rsuite";
+import FreetimePeriod from "./FreetimePeriod";
+import FreetimeReset from "./FreetimeReset";
+import { ButtonToolbar, Button, Loader, Alert } from "rsuite";
 
-class ScheduleForm extends React.Component {
-  handleClick = (updateFreetime, item) => { 
+class FreetimeForm extends React.Component {
+  handleClick = (updateFreetime, item) => {
     let { id, availability } = item;
     availability = availability === "no" ? "full" : "no";
     updateFreetime({
@@ -30,16 +31,16 @@ class ScheduleForm extends React.Component {
   };
 
   renderFreetime = (freetimes) => {
-    const { isDefault } = this.props
-    const { startDate, endDate, days, dates } = this.props.dates;
+    const { isDefault } = this.props;
+    const { schedule_No, startDate, endDate, days, dates } = this.props.dates;
     return (
       <div className="scheduleForm__container">
         <div className="scheduleForm__panel">
-            <SchedulePeriod
-              isDefault={isDefault}
-              startDate={startDate}
-              endDate={endDate}
-            />
+          <FreetimePeriod
+            isDefault={isDefault}
+            startDate={startDate}
+            endDate={endDate}
+          />
           <div className="scheduleForm__panelTitle">
             {days.map((item) => (
               <h5 key={item}>{item}</h5>
@@ -56,17 +57,23 @@ class ScheduleForm extends React.Component {
                     className="scheduleForm__btn"
                     onClick={() => this.handleClick(updateFreetime, item)}
                   >
-                    {isDefault ? index+1 : dates[index]}
+                    {isDefault ? index + 1 : dates[index]}
                   </Button>
                 )}
               </Mutation>
             ))}
           </div>
+          <ButtonToolbar className="scheduleForm__footer">
+            <FreetimeReset
+              isDefault={isDefault}
+              schedule_No={schedule_No}
+            />
+          </ButtonToolbar>
         </div>
       </div>
     );
   };
-  
+
   render() {
     const { isDefault } = this.props;
     const schedule_No = isDefault ? "0" : this.props.dates.schedule_No;
@@ -93,7 +100,7 @@ class ScheduleForm extends React.Component {
             if (error) {
               return Alert.error("Failed. Please try again.");
             }
-            const freetimes = data.myFreetimes
+            const freetimes = data.myFreetimes;
             if (freetimes.length === 0) {
               return (
                 <Mutation mutation={schema_createFreetimes}>
@@ -123,13 +130,13 @@ class ScheduleForm extends React.Component {
                         ],
                       });
                     } else {
-                      return this.renderFreetime(freetimes)
+                      return this.renderFreetime(freetimes);
                     }
                   }}
                 </Mutation>
               );
             } else {
-              return this.renderFreetime(freetimes)
+              return this.renderFreetime(freetimes);
             }
           }}
         </Query>
@@ -144,7 +151,7 @@ class ScheduleForm extends React.Component {
 //   };
 // };
 
-export default connect(null, actions)(ScheduleForm);
+export default connect(null, actions)(FreetimeForm);
 
 // update={(cache, { data: { updateFreetime } }) => {
 //   let { myFreetimes } = cache.readQuery({ query: schema_fetchFreetime, variables: { schedule_No: item.day_No.split('_')[0] } })

@@ -1,7 +1,7 @@
 import React from "react";
 import { Mutation } from "@apollo/react-components";
 import { schema_resetPassword } from "../../../schema/user";
-import { Modal, Button, Icon, IconButton } from "rsuite";
+import { Modal, Button, Icon, IconButton, Alert } from "rsuite";
 
 class ResetPassword extends React.Component {
   constructor(props) {
@@ -34,7 +34,7 @@ class ResetPassword extends React.Component {
           icon={<Icon icon="unlock-alt" />}
           className="staffList__btn"
         />
-        <Mutation mutation={schema_resetPassword}>
+        <Mutation mutation={schema_resetPassword} onCompleted={() => Alert.success("Success.")}>
           {(resetPassword) => (
             <div>
               {show && (

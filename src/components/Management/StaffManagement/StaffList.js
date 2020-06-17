@@ -9,7 +9,7 @@ const { Column, HeaderCell, Cell } = Table;
 class StaffList extends React.Component {
   render() {
     return (
-      <Query query={schema_staffList} >
+      <Query query={schema_staffList}>
         {({ loading, error, data }) => {
           if (loading) {
             return (
@@ -23,14 +23,11 @@ class StaffList extends React.Component {
             );
           }
           if (error) {
-            return (
-              Alert.error('Failed. Please try again.')
-            )
+            return Alert.error("Failed. Please try again.");
           }
-          const usersList = data.users.filter(item => item.employeeId !== "0000")
           return (
             <div>
-              <Table height={420} data={usersList} width={680} hover>
+              <Table height={420} data={data.users} width={680} hover>
                 <Column width={100} align="center">
                   <HeaderCell>Employee ID</HeaderCell>
                   <Cell dataKey="employeeId" />

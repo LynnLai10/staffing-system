@@ -3,6 +3,7 @@ import { connect } from "react-redux";
 import * as actions from "../../actions/users";
 import { Mutation } from "@apollo/react-components";
 import { schema_changePassword } from "../../schema/user";
+import LoadingError from "../LoadingError";
 import {
   Form,
   FormGroup,
@@ -12,8 +13,8 @@ import {
   ButtonToolbar,
   Button,
   Alert,
-  Loader
 } from "rsuite";
+
 const { StringType } = Schema.Types;
 
 const model = Schema.Model({
@@ -76,7 +77,7 @@ class ChangePassword extends React.Component {
   render() {
     const { formValue } = this.state;
     return (
-      <Mutation mutation={schema_changePassword}>
+      <Mutation mutation={schema_changePassword} onCompleted={() => Alert.success("Success.")}>
         {(changePassword, { loading, error }) => (
           <div>
             <Form
@@ -104,16 +105,7 @@ class ChangePassword extends React.Component {
                 </Button>
               </ButtonToolbar>
             </Form>
-            {loading && (
-              <Loader
-                backdrop
-                center
-                size="md"
-                content={`In process...`}
-                vertical
-              />
-            )}
-            {error && Alert.error('Failed. Please try again.')}
+            <LoadingError loading={loading} error={error} />
           </div>
         )}
       </Mutation>

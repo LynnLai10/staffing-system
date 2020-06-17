@@ -1,53 +1,8 @@
 import { gql } from "apollo-boost";
 
 export const schema_fetchSchedule = gql`
-  query FetchSchedule {
-    schedules {
-      id
-      schedule_No
-      schedule_days {
-        id
-        day_No
-        schedule_staffs {
-          id
-          schedule_interval {
-            start
-            end
-          }
-          position
-          staff {
-            employeeId
-            name
-          }
-        }
-      }
-    }
-  }
-`;
-
-export const schema_fetchStaffList = gql`
-  query fetchStaffList(
-    $availability: String!
-    $day_No: String!
-  ) {
-    freetimes(day_No: $day_No, availability: $availability) {
-      id
-      user {
-        employeeId
-        name
-        sex
-      }
-    }
-  }
-`;
-
-export const schema_createSchedule = gql`
-  mutation CreateSchedule ($schedule_No: String!) {
-    createSchedule (
-      schedule_No: $schedule_No
-    ){
-      id
-      schedule_No
+  query FetchSchedule ($schedule_No: String!) {
+    schedule (schedule_No: $schedule_No) {
       schedule_days {
         id
         day_No
@@ -78,3 +33,14 @@ export const schema_updateStaffs = gql`
     }
   }
 `
+
+export const schema_resetSchedule = gql`
+  mutation DeleteSchedule_Staffs ($schedule_No: String!) {
+    deleteSchedule_Staffs (
+      schedule_No: $schedule_No
+    ) {
+      count
+    }
+  }
+`
+

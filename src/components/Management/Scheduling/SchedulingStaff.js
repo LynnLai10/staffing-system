@@ -34,7 +34,7 @@ class SchedulingStaff extends React.Component {
     }, this.props.index);
   };
   render() {
-    console.log(this.props)
+    // console.log(this.props)
     const { schedule_interval, staff } = this.props.item
     return (
       <div className="scheduleDay__staff">

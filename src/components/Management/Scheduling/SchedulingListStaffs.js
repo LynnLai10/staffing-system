@@ -4,7 +4,9 @@ class ScheduleListStaffs extends React.Component {
     const { element, index } = this.props;
     return (
       <div
-        className={`scheduleList__panel__staff ${element.position === "Tally Clerk" ? "tallyClerk" : "casher"}`}
+        className={`scheduleList__panel__staff ${
+          element.position === "Tally Clerk" ? "tallyClerk" : "casher"
+        }`}
         key={`staff-${index}`}
       >
         <p>

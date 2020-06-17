@@ -12,7 +12,6 @@ class SchedulingDrawer extends React.Component {
         .add(this.props.index, "day")
         .format("Do MMM"),
     };
-    this.isDefault = this.props.data.day_No.split('_')[0] === "0"
     this.date = this.isDefault ? this.props.index + 1 : this.props.dates.dates[this.props.index]
     this.day = this.props.index < 7 ? this.props.dates.days[this.props.index] : this.props.dates.days[this.props.index-7]
     
@@ -28,7 +27,7 @@ class SchedulingDrawer extends React.Component {
     });
   };
   render() {
-    const { index, data, staffList } = this.props;
+    const { isDefault, index, data, dates, staffList } = this.props;
     return (
       <div key={index}>
         <Button
@@ -37,7 +36,7 @@ class SchedulingDrawer extends React.Component {
           className="scheduleForm__btn"
           onClick={this.toggleDrawer}
         >
-          {this.date}
+          {isDefault ? index+1 : this.date}
         </Button>
 
         <Drawer
@@ -48,14 +47,16 @@ class SchedulingDrawer extends React.Component {
         >
           <Drawer.Header>
             <Drawer.Title>
-              {index < 7 ? "First" : "Second"} Week: {this.day}, {this.isDefault ? `Day ${this.date}` : this.state.date}
+              {index < 7 ? "First" : "Second"} Week: {this.day}, {isDefault ? `Day ${this.date}` : this.state.date}
             </Drawer.Title>
           </Drawer.Header>
           <Drawer.Body>
             {this.state.show && (
               <SchedulingDay
+                isDefault={isDefault}
                 index={index}
                 data={data}
+                dates={dates}
                 onClose={this.close}
                 staffList={staffList}
               />
