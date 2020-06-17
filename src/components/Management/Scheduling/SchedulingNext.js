@@ -15,6 +15,7 @@ class SchedulingNext extends React.Component {
       : this.props.dates.schedule_No;
   }
   duplicateSchedule = (schedule) => {
+    schedule = schedule.slice(0, 7);
     const duplicatedSchedule = schedule.concat(schedule);
     return duplicatedSchedule.map((item, index) => {
       return index < 7

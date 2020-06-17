@@ -43,10 +43,10 @@ class SchedulingForm extends React.Component {
     const { startDate, endDate, days, dates } = this.props.dates;
     return (
       <div>
-        <div className="scheduleForm__container">
-          <div className="scheduleForm__panel">
+        <div className="freetimeForm__container">
+          <div className="freetimeForm__panel">
             {!isDefault && (
-              <div className="scheduleForm_No">
+              <div className="freetimeForm_No">
                 <FreetimePeriod
                   isDefault={isDefault}
                   startDate={startDate}
@@ -55,12 +55,12 @@ class SchedulingForm extends React.Component {
                 <h6>Schedule No: {this.schedule_No}</h6>
               </div>
             )}
-            <div className="scheduleForm__panelTitle">
+            <div className="freetimeForm__panelTitle">
               {days.map((item) => (
                 <h5 key={item}>{item}</h5>
               ))}
             </div>
-            <div className="scheduleForm__panelItem">
+            <div className="freetimeForm__panelItem">
               {!isDefault
                 ? dates.map((item, index) => (
                     <SchedulingDrawer
@@ -82,7 +82,7 @@ class SchedulingForm extends React.Component {
                     />
                   ))}
             </div>
-            <ButtonToolbar className="scheduleForm__footer">
+            <ButtonToolbar className="freetimeForm__footer">
               <SchedulingReset isDefault={isDefault} schedule_No={this.schedule_No}/>
             </ButtonToolbar>
           </div>

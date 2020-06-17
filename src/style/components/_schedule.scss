@@ -1,7 +1,12 @@
-.toggle {
+.scheduleDay__staff {
   display: flex;
+  align-items: center;
   justify-content: space-between;
-  margin: 0 0 -2rem 2rem;
-  width: 23rem; 
-  padding: 2rem 0;  
+  margin: 0.5rem auto;
+}
+
+.scheduleDay__btn {
+  margin: 1rem 1rem 1rem auto;
+  display: flex;
+  justify-content: flex-end;
 }

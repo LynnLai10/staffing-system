@@ -1,12 +1,12 @@
 @import "./base/_settings";
 @import "./base/_base";
 @import "./components/_header.scss";
-@import "./components/_scheduleForm.scss";
-@import "./components/_schedule";
+@import "./components/_freetimeForm.scss";
+@import "./components/_freetime";
 @import "./components/_login.scss";
 @import "./components/_staffList";
-@import "./components/_scheduling";
-@import "./components/_schedulingList";
+@import "./components/_schedule";
+@import "./components/_scheduleList";
 
 .container {
   margin: 20px 20px 20px 10px;

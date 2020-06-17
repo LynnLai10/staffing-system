@@ -1,73 +1,55 @@
 import React from "react";
-import { connect } from "react-redux";
-import * as actions from "../../actions/freetime";
 import { Query, Mutation } from "@apollo/react-components";
 import {
-  schema_updateFreetime,
   schema_createFreetimes,
   schema_fetchFreetimes,
 } from "../../schema/freetime";
 import FreetimePeriod from "./FreetimePeriod";
 import FreetimeReset from "./FreetimeReset";
+import FreetimeCasher from "./FreetimeCasher";
+import FreetimeTallyClerk from "./FreetimeTallyClerk";
 import { ButtonToolbar, Button, Loader, Alert } from "rsuite";
 
 class FreetimeForm extends React.Component {
-  handleClick = (updateFreetime, item) => {
-    let { id, availability } = item;
-    availability = availability === "no" ? "full" : "no";
-    updateFreetime({
-      variables: {
-        id,
-        availability,
-      },
-      optimisticResponse: {
-        __typename: "Mutation",
-        updateFreetime: {
-          ...item,
-          availability,
-        },
-      },
-    });
-  };
-
   renderFreetime = (freetimes) => {
-    const { isDefault } = this.props;
+    const { isDefault, isTallyClerk } = this.props;
     const { schedule_No, startDate, endDate, days, dates } = this.props.dates;
     return (
-      <div className="scheduleForm__container">
-        <div className="scheduleForm__panel">
+      <div className="freetimeForm__container">
+        <div className="freetimeForm__panel">
           <FreetimePeriod
             isDefault={isDefault}
             startDate={startDate}
             endDate={endDate}
           />
-          <div className="scheduleForm__panelTitle">
+          <div className="freetimeForm__panelTitle">
             {days.map((item) => (
               <h5 key={item}>{item}</h5>
             ))}
           </div>
-          <div className="scheduleForm__panelItem">
-            {freetimes.map((item, index) => (
-              <Mutation key={index} mutation={schema_updateFreetime}>
-                {(updateFreetime) => (
-                  <Button
-                    appearance={
-                      item.availability === "full" ? "primary" : "ghost"
-                    }
-                    className="scheduleForm__btn"
-                    onClick={() => this.handleClick(updateFreetime, item)}
-                  >
-                    {isDefault ? index + 1 : dates[index]}
-                  </Button>
-                )}
-              </Mutation>
-            ))}
+          <div className="freetimeForm__panelItem">
+            {isTallyClerk
+              ? freetimes.map((item, index) => (
+                  <FreetimeTallyClerk
+                    item={item}
+                    key={index}
+                    index={index}
+                    dates={dates}
+                    isDefault={isDefault}
+                  />
+                ))
+              : freetimes.map((item, index) => (
+                  <FreetimeCasher
+                    item={item}
+                    key={index}
+                    index={index}
+                    dates={dates}
+                    isDefault={isDefault}
+                  />
+                ))}
           </div>
-          <ButtonToolbar className="scheduleForm__footer">
-            <FreetimeReset
-              isDefault={isDefault}
-              schedule_No={schedule_No}
-            />
+          <ButtonToolbar className="freetimeForm__footer">
+            <FreetimeReset isDefault={isDefault} schedule_No={schedule_No} />
           </ButtonToolbar>
         </div>
       </div>
@@ -144,14 +126,8 @@ class FreetimeForm extends React.Component {
     );
   }
 }
-// const mapStateToProps = ({ user }, ownProps) => {
-//   const { freetime_next, freetime_default } = user;
-//   return {
-//     freetime: ownProps.isDefault ? freetime_default : freetime_next,
-//   };
-// };
 
-export default connect(null, actions)(FreetimeForm);
+export default FreetimeForm;
 
 // update={(cache, { data: { updateFreetime } }) => {
 //   let { myFreetimes } = cache.readQuery({ query: schema_fetchFreetime, variables: { schedule_No: item.day_No.split('_')[0] } })

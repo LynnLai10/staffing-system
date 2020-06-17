@@ -1,57 +1,70 @@
-.scheduleForm__container {
+.freetimeForm__container {
     width: fit-content;
     margin-top: 2.4rem;
 }
 
-.scheduleForm__panel {
+.freetimeForm__panel {
     width: 64.5rem;
     margin: auto 1rem;
     // margin-top: -2.5rem;
 }
 
-.scheduleForm__panel h6 {
+.freetimeForm__panel h6 {
     display: inline-block;
     margin: 0 0 1rem 1rem;
 }
 
-.scheduleForm_No {
+.freetimeForm_No {
     display: flex;
     justify-content: space-between;
     padding-right: 2rem;
 }
 
-.scheduleForm__panelTitle {
+.freetimeForm__panelTitle {
     display: flex;
     margin: auto 5px;
 }
 
-.scheduleForm__panelTitle h5 {
+.freetimeForm__panelTitle h5 {
     display: inline-block;
     width: $xxl-size;
     text-align: center;
     margin: auto 0.5rem;
 }
 
-.scheduleForm__panelItem {
+.freetimeForm__panelItem {
     display: flex;
     margin: auto 5px;
     flex-wrap: wrap;
 }
+  
+.freetimeForm__footer {
+    display: flex;
+    justify-content: flex-end;
+    margin: $s-size 2.5rem;
+}
 
-.scheduleForm__btn {
+.freetimeForm__footer Button {
+    margin-left: $s-size;
+}
+
+.freetime__btn {
     color: #b3b3b3b6;
     font-size: $l-size;
     width: $xxl-size;
     height: $xxl-size;
     margin: 0.8rem 0.5rem;
 }
-  
-.scheduleForm__footer {
-    display: flex;
-    justify-content: flex-end;
-    margin: $s-size 2.5rem;
+
+.freetimeTallyClerk__date {
+    display: inline-block;
+    font-size: $l-size;
+    text-align: center;
+    color: #b3b3b3b6;
+    position: absolute;
+    width: $xxl-size;
+    height: $xxl-size;
+    margin: 0.8rem 0.6rem;   
 }
 
-.scheduleForm__footer Button {
-    margin-left: $s-size;
-}
+

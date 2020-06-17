@@ -36,7 +36,7 @@ class FreetimeNext extends React.Component {
           <p>Use Default Setting</p>
         </div>
         {!data.me.useDefaultFreetime && (
-          <FreetimeForm isDefault={false} dates={this.props.dates} />
+          <FreetimeForm isDefault={false} dates={this.props.dates} isTallyClerk={this.props.user.sex === "Male"}/>
         )}
       </div>
     );

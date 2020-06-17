@@ -33,7 +33,7 @@ class SchedulingDrawer extends React.Component {
         <Button
           appearance="default"
           color={this.state.show ? "blue" : "cyan"}
-          className="scheduleForm__btn"
+          className="freetime__btn"
           onClick={this.toggleDrawer}
         >
           {isDefault ? index+1 : this.date}
