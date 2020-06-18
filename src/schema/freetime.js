@@ -1,6 +1,6 @@
 import { gql } from "apollo-boost";
 
-export const schema_fetchFreetimes = gql`
+export const schema_fetchMyFreetimes = gql`
   query MyFreetimes($schedule_No: String!) {
     myFreetimes(schedule_No: $schedule_No) {
       id
@@ -48,6 +48,22 @@ export const schema_changeUseDefault = gql`
       sex
       accountType
       useDefaultFreetime
+    }
+  }
+`;
+
+export const schema_fetchFreetimes = gql`
+  query freetimes ($schedule_No: String!) {
+    freetimes (schedule_No: $schedule_No) {
+      schedule_day {
+        day_No
+      }
+      user {
+        employeeId
+        name
+        sex
+      }
+      availability
     }
   }
 `;

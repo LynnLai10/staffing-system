@@ -6,36 +6,45 @@ class SchedulingStaff extends React.Component {
     this.props.onDelete(this.props.index);
   };
   handleChange_staff = (value) => {
-    const staff = this.props.staffList.find(item => item.value === value)
-    this.props.onChange({
-      ...this.props.item,
-      staff: {
-        employeeId: value ? value : "",
-        name: staff ? staff.label : ""
-      }
-    }, this.props.index);
+    const staff = this.props.staffList.find((item) => item.value === value);
+    this.props.onChange(
+      {
+        ...this.props.item,
+        staff: {
+          employeeId: value ? value : "",
+          name: staff ? staff.label : "",
+        },
+      },
+      this.props.index
+    );
   };
   handleChange_start = (value) => {
-    this.props.onChange({
-      ...this.props.item,
-      schedule_interval: {
-        ...this.props.item.schedule_interval,
-        start: value
-      }
-    }, this.props.index);
+    this.props.onChange(
+      {
+        ...this.props.item,
+        schedule_interval: {
+          ...this.props.item.schedule_interval,
+          start: value,
+        },
+      },
+      this.props.index
+    );
   };
   handleChange_end = (value) => {
-    this.props.onChange({
-      ...this.props.item,
-      schedule_interval: {
-        ...this.props.item.schedule_interval,
-        end: value
-      }
-    }, this.props.index);
+    this.props.onChange(
+      {
+        ...this.props.item,
+        schedule_interval: {
+          ...this.props.item.schedule_interval,
+          end: value,
+        },
+      },
+      this.props.index
+    );
   };
   render() {
-    // console.log(this.props)
-    const { schedule_interval, staff } = this.props.item
+    const { disabledStaffs } = this.props;
+    const { schedule_interval, staff } = this.props.item;
     return (
       <div className="scheduleDay__staff">
         <div style={{ width: 60 }}>
@@ -56,14 +65,14 @@ class SchedulingStaff extends React.Component {
           />
         </div>
         <SelectPicker
-          data={
-            this.props.staffList
-          }
+          data={this.props.staffList}
           style={{ width: 140 }}
           placement="bottomEnd"
-          value={staff? staff.employeeId : ""}
+          value={staff ? staff.employeeId : ""}
           searchable={false}
-          disabledItemValues={this.props.disabledStaffs.map(item => item.staff.employeeId)}
+          disabledItemValues={disabledStaffs.map(
+            (item) => item.staff.employeeId
+          )}
           onChange={this.handleChange_staff}
         />
         <IconButton

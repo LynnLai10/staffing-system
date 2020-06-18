@@ -33,7 +33,7 @@ class SchedulingDefault extends React.Component {
                 <SchedulingForm
                   isDefault
                   dates={this.props.dates}
-                  data={data.schedule.schedule_days}
+                  Data={data.schedule.schedule_days}
                 />
                 <Divider />
                 <SchedulingList

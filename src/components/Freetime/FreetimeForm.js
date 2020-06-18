@@ -2,13 +2,13 @@ import React from "react";
 import { Query, Mutation } from "@apollo/react-components";
 import {
   schema_createFreetimes,
-  schema_fetchFreetimes,
+  schema_fetchMyFreetimes,
 } from "../../schema/freetime";
 import FreetimePeriod from "./FreetimePeriod";
 import FreetimeReset from "./FreetimeReset";
 import FreetimeCasher from "./FreetimeCasher";
 import FreetimeTallyClerk from "./FreetimeTallyClerk";
-import { ButtonToolbar, Button, Loader, Alert } from "rsuite";
+import { ButtonToolbar, Loader, Alert } from "rsuite";
 
 class FreetimeForm extends React.Component {
   renderFreetime = (freetimes) => {
@@ -62,7 +62,7 @@ class FreetimeForm extends React.Component {
     return (
       <div>
         <Query
-          query={schema_fetchFreetimes}
+          query={schema_fetchMyFreetimes}
           variables={{
             schedule_No,
           }}
@@ -106,7 +106,7 @@ class FreetimeForm extends React.Component {
                         variables: { schedule_No },
                         refetchQueries: [
                           {
-                            query: schema_fetchFreetimes,
+                            query: schema_fetchMyFreetimes,
                             variables: { schedule_No },
                           },
                         ],

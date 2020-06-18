@@ -55,10 +55,11 @@ class SchedulingNext extends React.Component {
             if (error) {
               return Alert.error("Failed. Please try again.");
             }
+            // console.log(data.schedule)
             const defaultSchedule = this.duplicateSchedule(
               data.schedule.schedule_days
             );
-            console.log(defaultSchedule);
+            // console.log(defaultSchedule);
             return (
               <div>
                 <Query
@@ -86,14 +87,14 @@ class SchedulingNext extends React.Component {
                       defaultSchedule,
                       nextSchedule
                     );
-                    console.log(nextSchedule);
-                    console.log(schedule);
+                    // console.log(nextSchedule);
+                    // console.log(schedule);
                     return (
                       <div>
                         <SchedulingForm
                           isDefault={false}
                           dates={this.props.dates}
-                          data={schedule}
+                          Data={schedule}
                         />
                         <Divider />
                         <SchedulingList

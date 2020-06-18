@@ -27,14 +27,22 @@ class SchedulingDay extends React.Component {
         casher: [],
       },
     };
-    this.schedule_No = this.props.dates.schedule_No
-    this.isDefault = this.props.isDefault
+    this.schedule_No = this.props.dates.schedule_No;
+    this.isDefault = this.props.isDefault;
   }
   componentDidMount() {
     this.setState(
       {
         staffs: this.props.data.schedule_staffs,
-        staffList: this.props.staffList,
+        staffList: {
+          casher: this.props.staffList.casher,
+          tallyClerk: {
+            all: this.props.staffList.tallyClerk,
+            full: this.props.staffList.tallyClerk.filter(
+              (item) => item.availability === "full"
+            ),
+          },
+        },
       },
       () => {
         this.setState((prevState) => ({
@@ -71,7 +79,6 @@ class SchedulingDay extends React.Component {
     const staffs = this.state.staffs.map((item, index) =>
       index === staffIndex ? data : item
     );
-
     this.setState(
       {
         staffs,
@@ -100,10 +107,9 @@ class SchedulingDay extends React.Component {
   formatStaff = (data) => {
     return data.map((item) => ({
       id: this.isDefault ? item.id : "",
-      day_No:
-      this.isDefault
-          ? this.props.data.day_No
-          : `${this.schedule_No}_${this.props.data.day_No.split("_")[1]}`,
+      day_No: this.isDefault
+        ? this.props.data.day_No
+        : `${this.schedule_No}_${this.props.data.day_No.split("_")[1]}`,
       position: item.position,
       employeeId: item.staff === null ? "" : item.staff.employeeId,
       interval_No: `${item.schedule_interval.start}-${item.schedule_interval.end}`,
@@ -111,9 +117,10 @@ class SchedulingDay extends React.Component {
   };
 
   handleSubmit = (updateStaffs) => {
-    const oldStaffs = this.isDefault ? this.formatStaff(this.props.data.schedule_staffs) : [];
+    const oldStaffs = this.isDefault
+      ? this.formatStaff(this.props.data.schedule_staffs)
+      : [];
     const newStaffs = this.formatStaff(this.state.staffs);
-    console.log(oldStaffs, newStaffs)
     updateStaffs({
       variables: {
         oldStaffs,
@@ -135,8 +142,8 @@ class SchedulingDay extends React.Component {
       <Mutation
         mutation={schema_updateStaffs}
         onCompleted={() => {
-          this.props.onClose()
-          Alert.success("Success.")
+          this.props.onClose();
+          Alert.success("Success.");
         }}
       >
         {(updateStaffs, { loading, error }) => {
@@ -154,6 +161,7 @@ class SchedulingDay extends React.Component {
           if (error) {
             return Alert.error("Failed. Please try again.");
           }
+
           return (
             <div>
               <PanelGroup accordion bordered>
@@ -177,7 +185,8 @@ class SchedulingDay extends React.Component {
                           onChange={this.handleChange}
                           onDelete={this.handleDelete}
                           disabledStaffs={disabledStaffs.tallyClerk}
-                          staffList={staffList.tallyClerk}
+                          staffList={Number(item.schedule_interval.start) > 11 ? staffList.tallyClerk.all : staffList.tallyClerk.full}
+                          isTallyClerk
                         />
                       )
                   )}
@@ -203,6 +212,7 @@ class SchedulingDay extends React.Component {
                           onDelete={this.handleDelete}
                           disabledStaffs={disabledStaffs.casher}
                           staffList={staffList.casher}
+                          isTallyClerk={false}
                         />
                       )
                   )}

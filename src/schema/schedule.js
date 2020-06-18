@@ -3,6 +3,7 @@ import { gql } from "apollo-boost";
 export const schema_fetchSchedule = gql`
   query FetchSchedule ($schedule_No: String!) {
     schedule (schedule_No: $schedule_No) {
+      id
       schedule_days {
         id
         day_No
@@ -43,4 +44,5 @@ export const schema_resetSchedule = gql`
     }
   }
 `
+
 
