@@ -1,12 +1,7 @@
-import {
-  FETCH_USER,
-  FETCH_FREETIME,
-  UPDATE_FREETIME,
-  CHANGE_USEDEFAULT,
-} from "../actions/types";
+import { FETCH_USER } from "../actions/types";
 import getDate from "../utils/getDate";
 
-const dates = getDate()
+const dates = getDate();
 const initialState = {
   user: {
     name: undefined,
@@ -15,11 +10,9 @@ const initialState = {
     accountType: undefined,
     useDefaultFreetime: false,
   },
-  freetime_next: [],
-  freetime_default: [],
   dates: {
     ...dates,
-    days: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
+    days: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
   },
 };
 
@@ -29,42 +22,6 @@ export default function (state = initialState, action) {
       return {
         ...state,
         user: action.payload,
-      };
-    case FETCH_FREETIME:
-      return action.payload.isDefault
-        ? {
-            ...state,
-            freetime_default: action.payload.freetime,
-          }
-        : {
-            ...state,
-            freetime_next: action.payload.freetime,
-          };
-    case UPDATE_FREETIME:
-      const isDefault = action.payload.day_No.split("_")[0] === "0";
-      const data = isDefault ? state.freetime_default : state.freetime_next;
-      const updatedFreetime = data.map((item) => {
-        if (item.day_No === action.payload.day_No) {
-          return action.payload;
-        }
-        return item;
-      });
-      return isDefault
-        ? {
-            ...state,
-            freetime_default: updatedFreetime,
-          }
-        : {
-            ...state,
-            freetime_next: updatedFreetime,
-          };
-    case CHANGE_USEDEFAULT:
-      return {
-        ...state,
-        user: {
-          ...state.user,
-          useDefaultFreetime: action.payload,
-        },
       };
     default:
       return state;

@@ -5,8 +5,6 @@ import reduxThunk from 'redux-thunk'
 import { combineReducers } from 'redux'
 import authReducer from './reducers/authReducer'
 import userReducer from './reducers/userReducer'
-import usersReducer from './reducers/usersReducer'
-import scheduleReducer from './reducers/scheduleReducer'
 
 const rootPersistConfig = {
   key: 'root',
@@ -23,8 +21,6 @@ const userPersistConfig = {
 const rootReducer = combineReducers({
   auth: authReducer,
   user: persistReducer(userPersistConfig, userReducer),
-  users: usersReducer,
-  schedule: scheduleReducer
 })
 
 const persistedReducer = persistReducer(rootPersistConfig, rootReducer)

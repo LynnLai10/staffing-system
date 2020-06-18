@@ -24,13 +24,13 @@ class SchedulingForm extends React.Component {
       const tallyClerk = [];
       const casher = [];
       for (let j = 0; j < staffList_day.length; j++) {
-        const { user, availability } = staffList_day[j];
+        const { staff, availability } = staffList_day[j];
         const template = {
-          value: user.employeeId,
-          label: user.name,
+          value: staff.employeeId,
+          label: staff.name,
           availability,
         };
-        if (user.sex === "Male") {
+        if (staff.sex === "Male") {
           tallyClerk.push(template);
         } else {
           casher.push(template);
@@ -48,12 +48,12 @@ class SchedulingForm extends React.Component {
     return staffList_days;
   };
 
-  filterDefaultFreetime = (users) => {
-    const tallyClerk = users.filter(item => item.sex === "Male")
-    const casher = users.filter(item => item.sex !== "Male")
-    const template = (user) => ({
-      value: user.employeeId,
-      label: user.name,
+  filterDefaultFreetime = (staffs) => {
+    const tallyClerk = staffs.filter(item => item.sex === "Male")
+    const casher = staffs.filter(item => item.sex !== "Male")
+    const template = (staff) => ({
+      value: staff.employeeId,
+      label: staff.name,
       availability: "full",
     });
     return {

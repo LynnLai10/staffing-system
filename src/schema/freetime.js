@@ -58,7 +58,7 @@ export const schema_fetchFreetimes = gql`
       schedule_day {
         day_No
       }
-      user {
+      staff {
         employeeId
         name
         sex
