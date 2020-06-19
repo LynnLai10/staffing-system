@@ -9,7 +9,7 @@ class FreetimeDeafult extends React.Component {
     return (
       <div>
         <PanelNav activeKey={"default"} path={"schedule"} />
-        <FreetimeForm isDefault dates={this.props.dates} />
+        <FreetimeForm isDefault dates={this.props.dates} isTallyClerk={this.props.user.sex === "Male"}/>
       </div>
     );
   }
@@ -17,6 +17,7 @@ class FreetimeDeafult extends React.Component {
 
 const mapStateToProps = ({ user }) => {
   return {
+    user: user.user,
     dates: user.dates,
   };
 };

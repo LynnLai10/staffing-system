@@ -39,12 +39,14 @@ class FreetimeTallyClerk extends React.Component {
               <Button
                 appearance={item.availability === "half" ? "primary" : "ghost"}
                 onClick={() => this.handleClick(updateFreetime, item, false)}
+                className="freetimeTallyClerk__btn"
               >
                 HALF
               </Button>
               <Button
                 appearance={item.availability === "full" ? "primary" : "ghost"}
                 onClick={() => this.handleClick(updateFreetime, item, true)}
+                className="freetimeTallyClerk__btn"
               >
                 FULL
               </Button>

@@ -2,7 +2,7 @@ import React from "react";
 import { Mutation } from "@apollo/react-components";
 import {
   schema_resetFreetimes,
-  schema_fetchFreetimes,
+  schema_fetchMyFreetimes,
 } from "../../schema/freetime";
 import LoadingError from "../LoadingError";
 import { Modal, ButtonToolbar, Button, Icon, Alert } from "rsuite";
@@ -28,7 +28,7 @@ class FreetimeReset extends React.Component {
       },
       refetchQueries: [
         {
-          query: schema_fetchFreetimes,
+          query: schema_fetchMyFreetimes,
           variables: { schedule_No: this.schedule_No },
         },
       ],

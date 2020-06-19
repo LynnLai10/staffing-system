@@ -49,7 +49,7 @@
 }
 
 .freetime__btn {
-    color: #b3b3b3b6;
+    // color: #8685856e;
     font-size: $l-size;
     width: $xxl-size;
     height: $xxl-size;
@@ -60,11 +60,18 @@
     display: inline-block;
     font-size: $l-size;
     text-align: center;
-    color: #b3b3b3b6;
+    color: #b3b3b34b;
     position: absolute;
     width: $xxl-size;
     height: $xxl-size;
     margin: 0.8rem 0.6rem;   
+}
+
+.freetimeTallyClerk__btn {
+    opacity: 0.85;
+    font-weight: 600;
+    font-size: 1.5rem;
+    text-shadow: rgb(255, 255, 255) 0 0 15px;
 }
 
 
