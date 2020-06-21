@@ -1,21 +1,45 @@
 import { gql } from "apollo-boost";
-
-export const schema_login = gql`
-  mutation Login($employeeId: String!, $password: String!) {
-    login(data: { employeeId: $employeeId, password: $password }) {
-      user {
-        id
-        name
-        employeeId
-        accountType
-        sex
-        useDefaultFreetime
-      }
-      token
-    }
-  }
+const dataTemplate = `
+  id
+  name
+  employeeId
+  accountType
+  sex
+  useDefaultFreetime
+  hireDate
+  permanentStaff
 `;
 
+const variablesTemplate = `
+  $employeeId: String!
+  $name: String!
+  $sex: String!
+  $hireDate: String!
+  $permanentStaff: Boolean!
+  $accountType: String!
+`
+
+const inputTemplate = `
+  employeeId: $employeeId
+  name: $name
+  sex: $sex
+  accountType: $accountType
+  password: $employeeId
+  hireDate: $hireDate
+  permanentStaff: $permanentStaff
+`
+
+const schema_login_content = `
+mutation Login($employeeId: String!, $password: String!) {
+  login(data: { employeeId: $employeeId, password: $password }) {
+    user {` 
+    + dataTemplate +
+    `} token
+  }
+}
+`
+export const schema_login = gql`${schema_login_content}`
+//------------------------------------------------------------------
 export const schema_changePassword = gql`
   mutation ChangePassword(
     $employeeId: String!
@@ -30,86 +54,57 @@ export const schema_changePassword = gql`
     }
   }
 `;
-
-export const schema_staffList = gql`
+//-------------------------------------------------------------------
+const schema_staffList_content = `
   query Users {
-    users(orderBy: employeeId_ASC) {
-      id
-      employeeId
-      name
-      sex
-      accountType
-      useDefaultFreetime
-    }
+    users(orderBy: employeeId_ASC) {` 
+    + dataTemplate + 
+  `}
   }
 `;
-
-export const schema_createStaff = gql`
-  mutation CreateUser(
-    $employeeId: String!
-    $name: String!
-    $sex: String!
-    $accountType: String!
-  ) {
+export const schema_staffList = gql`${schema_staffList_content}`;
+//--------------------------------------------------------------------
+const schema_createStaff_content = `
+  mutation CreateUser(`
+   + variablesTemplate +  
+  `) {
     createUser(
       auth: "Eg80949597"
-      data: {
-        employeeId: $employeeId
-        name: $name
-        sex: $sex
-        accountType: $accountType
-        password: $employeeId
-      }
-    ) {
-      id
-      employeeId
-      name
-      sex
-      accountType
-      useDefaultFreetime
-    }
+      data: {`
+       + inputTemplate +  
+      `}
+    ){` + dataTemplate + 
+    `}
   }
 `;
-export const schema_updateStaff = gql`
+export const schema_createStaff = gql`${schema_createStaff_content}`;
+//----------------------------------------------------------------------
+const schema_updateStaff_content = `
   mutation UpdateUser(
-    $originalId: String!
-    $employeeId: String!
-    $name: String!
-    $sex: String!
-    $accountType: String!
-  ) {
+    $originalId: String!`
+    + variablesTemplate +
+  `) {
     updateUser(
       employeeId: $originalId
-      data: {
-        employeeId: $employeeId
-        name: $name
-        sex: $sex
-        accountType: $accountType
-      }
-    ) {
-      id
-      employeeId
-      name
-      sex
-      accountType
-      useDefaultFreetime
-    }
+      data: {`
+        + inputTemplate + 
+      `}
+    ) {`
+      + dataTemplate + 
+    `}
   }
 `;
-
-export const schema_deleteStaff = gql`
+export const schema_updateStaff = gql`${schema_updateStaff_content}`;
+//----------------------------------------------------------------------
+const schema_deleteStaff_content = `
   mutation DeleteUser($employeeId: String!) {
-    deleteUser(employeeId: $employeeId) {
-      id
-      employeeId
-      name
-      sex
-      accountType
-      useDefaultFreetime
-    }
+    deleteUser(employeeId: $employeeId) {`
+      + dataTemplate + 
+    `}
   }
 `;
-
+export const schema_deleteStaff = gql`${schema_deleteStaff_content}`;
+//--------------------------------------------------------------------------
 export const schema_resetPassword = gql`
   mutation ResetPassword($employeeId: String!) {
     updateUser(employeeId: $employeeId, data: { password: $employeeId }) {
@@ -117,16 +112,12 @@ export const schema_resetPassword = gql`
     }
   }
 `;
-
-export const schema_me = gql`
+//---------------------------------------------------------------------------
+const schema_me_content = `
   query {
-    me {
-      id
-      employeeId
-      name
-      sex
-      accountType
-      useDefaultFreetime
-    }
+    me {`
+      + dataTemplate +
+    `}
   }
-`
+`;
+export const schema_me = gql`${schema_me_content}`;

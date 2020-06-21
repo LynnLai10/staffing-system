@@ -44,7 +44,6 @@ class SchedulingForm extends React.Component {
         },
       });
     }
-    console.log(staffList_days)
     return staffList_days;
   };
 

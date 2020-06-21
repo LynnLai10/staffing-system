@@ -1,5 +1,5 @@
 import React from "react";
-class ScheduleListStaffs extends React.Component {
+class SchedulingListWeeklyStaff extends React.Component {
   render() {
     const { element, index } = this.props;
     return (
@@ -22,7 +22,7 @@ class ScheduleListStaffs extends React.Component {
   }
 }
 
-class SchedulingListStaffs extends React.Component {
+class SchedulingListWeeklyStaffs extends React.Component {
   render() {
     let { index, days, item } = this.props;
     if (index > 6) {
@@ -38,7 +38,7 @@ class SchedulingListStaffs extends React.Component {
       <div className="scheduleList__panel" key={index}>
         <p className="scheduleList__panel__day">{days[index]}</p>
         {tallyClerk.map((element, index) => (
-          <ScheduleListStaffs
+          <SchedulingListWeeklyStaff
             element={element}
             key={`el-${index}`}
             index={index}
@@ -46,7 +46,7 @@ class SchedulingListStaffs extends React.Component {
         ))}
         |
         {casher.map((element, index) => (
-          <ScheduleListStaffs
+          <SchedulingListWeeklyStaff
             element={element}
             key={`el-${index}`}
             index={index}
@@ -57,4 +57,4 @@ class SchedulingListStaffs extends React.Component {
   }
 }
 
-export default SchedulingListStaffs;
+export default SchedulingListWeeklyStaffs;

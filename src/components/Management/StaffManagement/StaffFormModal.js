@@ -15,6 +15,7 @@ import {
   Button,
   Radio,
   RadioGroup,
+  DatePicker,
   Schema,
   IconButton,
   Icon,
@@ -33,7 +34,7 @@ class CustomField extends React.PureComponent {
   render() {
     const { name, message, label, accepter, error, ...props } = this.props;
     return (
-      <FormGroup className={error ? "has-error" : ""}>
+      <FormGroup className={error ? "has-error" : "staffForm__modal"}>
         <ControlLabel>{label} </ControlLabel>
         <FormControl
           name={name}
@@ -56,6 +57,8 @@ class StaffFormModal extends React.Component {
         name: "",
         sex: "",
         accountType: "",
+        hireDate: new Date(),
+        permanentStaff: false,
       },
       originalId: "",
       show: false,
@@ -72,7 +75,10 @@ class StaffFormModal extends React.Component {
       delete this.props.data.password;
       this.setState({
         originalId: this.props.data.employeeId,
-        formValue: this.props.data,
+        formValue: {
+          ...this.props.data,
+          hireDate: new Date(this.props.data.hireDate),
+        },
       });
     }
   };
@@ -81,22 +87,24 @@ class StaffFormModal extends React.Component {
       formValue: value,
     });
   };
-  handleSubmit = (handleMutation) => {
+  handleSubmit = (mutate) => {
     const { originalId, formValue } = this.state;
     const variables = this.props.isEdit
       ? {
           ...formValue,
           originalId: originalId,
+          hireDate: formValue.hireDate.toString(),
         }
       : {
           ...formValue,
           password: formValue.employeeId,
+          hireDate: formValue.hireDate.toString(),
         };
-    handleMutation({
+    mutate({
       variables,
       refetchQueries: [{ query: schema_staffList }],
     });
-    this.close()
+    this.close();
   };
   render() {
     const { isEdit } = this.props;
@@ -104,14 +112,17 @@ class StaffFormModal extends React.Component {
     const schema = isEdit ? schema_updateStaff : schema_createStaff;
     return (
       <div>
-        <Mutation mutation={schema} onCompleted={() => Alert.success("Success.")}>
-          {(handleMutation) => {
+        <Mutation
+          mutation={schema}
+          onCompleted={() => Alert.success("Success.")}
+        >
+          {(mutate) => {
             return (
               <div>
                 {show && (
                   <Modal show={show} onHide={this.close} size="xs">
                     <Modal.Header>
-                      <Modal.Title>New Staff</Modal.Title>
+                      <Modal.Title>{isEdit? 'Edit' : 'New'} Staff</Modal.Title>
                     </Modal.Header>
                     <Modal.Body>
                       <Form
@@ -141,13 +152,33 @@ class StaffFormModal extends React.Component {
                           <Radio value={"Admin"}>Admin</Radio>
                           <Radio value={"Staff"}>Staff</Radio>
                         </CustomField>
+                        <CustomField
+                          name="hireDate"
+                          label="Hire Date"
+                          accepter={DatePicker}
+                          placement="topStart"
+                          oneTap
+                          format="DD-MM-YYYY"
+                          cleanable
+                          placeholder="Select a date"
+                          style={{ width: 160 }}
+                        ></CustomField>
+                        <CustomField
+                          name="permanentStaff"
+                          label="Permanent Staff"
+                          accepter={RadioGroup}
+                          inline
+                        >
+                          <Radio value={true}>Yes</Radio>
+                          <Radio value={false}>No</Radio>
+                        </CustomField>
                       </Form>
                     </Modal.Body>
                     <Modal.Footer>
                       <Button
                         appearance="primary"
                         onClick={() => {
-                          this.handleSubmit(handleMutation);
+                          this.handleSubmit(mutate);
                         }}
                         type="submit"
                       >

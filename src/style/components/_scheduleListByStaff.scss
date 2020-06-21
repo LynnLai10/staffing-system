@@ -1,0 +1,35 @@
+.scheduleListByStaff__staff {
+  display: flex;
+  width: 76rem;
+  border-bottom: solid 0.1rem;
+}
+.scheduleListByStaff__staff__name {
+  font-size: 1.6rem;
+  width: 18rem;
+  margin: 1rem 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1rem 0;
+}
+
+.scheduleListByStaff__staff__name p {
+  display: inline-block;
+  margin: 0;
+}
+.scheduleListByStaff__staff__name :last-child {
+  border-top: solid 0.2rem;
+}
+
+.scheduleListByStaff__staff__interval {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  padding: 1.5rem 0;
+}
+
+.scheduleListByStaff__staff__interval p {
+  font-size: 1.6rem;
+  width: 9rem;  
+  text-align: center;
+}
