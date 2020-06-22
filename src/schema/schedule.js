@@ -27,8 +27,8 @@ export const schema_fetchSchedule = gql`
 
 export const schema_updateStaffs = gql`
   mutation UpdateStaffs(
-    $oldStaffs: [UpdateScheduleStaffsInput]
-    $newStaffs: [UpdateScheduleStaffsInput]
+    $oldStaffs: [UpdateSchedule_StaffsInput]
+    $newStaffs: [UpdateSchedule_StaffsInput]
   ) {
     updateSchedule_Staffs(oldStaffs: $oldStaffs, newStaffs: $newStaffs) {
       count

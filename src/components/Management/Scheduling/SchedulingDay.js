@@ -31,9 +31,27 @@ class SchedulingDay extends React.Component {
     this.isDefault = this.props.isDefault;
   }
   componentDidMount() {
+    console.log(this.props.data.schedule_staffs);
+    console.log(this.props.staffList);
+    const staffList = this.props.staffList.tallyClerk.concat(
+      this.props.staffList.casher
+    );
+    const staffs = this.props.data.schedule_staffs.map((item) =>
+      staffList.find(
+        (element) => item.staff && element.value === item.staff.employeeId
+      )
+        ? item
+        : {
+            ...item,
+            staff: {
+              employeeId: "",
+              name: "",
+            },
+          }
+    );
     this.setState(
       {
-        staffs: this.props.data.schedule_staffs,
+        staffs,
         staffList: {
           casher: this.props.staffList.casher,
           tallyClerk: {
@@ -79,6 +97,7 @@ class SchedulingDay extends React.Component {
     const staffs = this.state.staffs.map((item, index) =>
       index === staffIndex ? data : item
     );
+    console.log(staffs);
     this.setState(
       {
         staffs,
@@ -185,7 +204,11 @@ class SchedulingDay extends React.Component {
                           onChange={this.handleChange}
                           onDelete={this.handleDelete}
                           disabledStaffs={disabledStaffs.tallyClerk}
-                          staffList={Number(item.schedule_interval.start) > 11 ? staffList.tallyClerk.all : staffList.tallyClerk.full}
+                          staffList={
+                            Number(item.schedule_interval.start) > 11
+                              ? staffList.tallyClerk.all
+                              : staffList.tallyClerk.full
+                          }
                           isTallyClerk
                         />
                       )

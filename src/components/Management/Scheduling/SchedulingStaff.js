@@ -2,6 +2,22 @@ import React from "react";
 import { IconButton, Icon, InputNumber, SelectPicker } from "rsuite";
 
 class SchedulingStaff extends React.Component {
+  // componentDidMount() {
+  //   console.log(this.props.staffList,this.props.staffList.length === 0)
+  //   console.log(this.props.item)
+  //   // if (this.props.staffList.length === 0 || (this.props.staffList.length !== 0 && !this.props.staffList.find(item => item.value === this.props.item.staff.employeeId))) {
+  //   //   this.props.onChange(
+  //   //     {
+  //   //       ...this.props.item,
+  //   //       staff: {
+  //   //         employeeId: "",
+  //   //         name: "",
+  //   //       },
+  //   //     },
+  //   //     this.props.index
+  //   //   );
+  //   // }
+  // }
   handleDelete = () => {
     this.props.onDelete(this.props.index);
   };

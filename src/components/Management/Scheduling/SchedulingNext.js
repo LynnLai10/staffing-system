@@ -88,7 +88,7 @@ class SchedulingNext extends React.Component {
                       nextSchedule
                     );
                     // console.log(nextSchedule);
-                    // console.log(schedule);
+                    console.log(schedule);
                     return (
                       <div>
                         <SchedulingForm
