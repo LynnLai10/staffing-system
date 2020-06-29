@@ -8,6 +8,7 @@ const dataTemplate = `
   useDefaultFreetime
   hireDate
   permanentStaff
+  lastLogin
 `;
 
 const variablesTemplate = `

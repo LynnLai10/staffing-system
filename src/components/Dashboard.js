@@ -2,11 +2,12 @@ import React from "react";
 import { Router, Route, Switch } from "react-router-dom";
 import { connect } from "react-redux";
 import * as actions from "../actions/users";
-import history from '../history'
+import history from "../history";
 import { Container, Sidebar, Content, Footer, Panel, Divider } from "rsuite";
 import SidebarNav from "./SidebarNav";
 import Header from "./Header";
 import MyFooter from "./MyFooter";
+import Welcome from "./Welcome";
 import FreetimeNext from "./Freetime/FreetimeNext";
 import FreetimeDefault from "./Freetime/FreetimeDefault";
 import Greens from "./CheckoutSystem/Greens";
@@ -29,81 +30,86 @@ class Dashboard extends React.Component {
   }
   render() {
     return (
-      <Router history={history}>
-        <Container>
-          <Sidebar>
-            <SidebarNav />
-          </Sidebar>
+      <div>
+        <Router history={history}>
           <Container>
-            <Content>
-              <div className="container">
-                <Header />
-                <Panel shaded>
-                  <Switch>
-                    <Route
-                      path="/dashboard/schedule/next"
-                      component={FreetimeNext}
-                    />
-                    <Route
-                      path="/dashboard/schedule/default"
-                      component={FreetimeDefault}
-                    />
-                    <Route
-                      path="/dashboard/checkoutSystem/greens"
-                      component={Greens}
-                    />
-                    <Route
-                      path="/dashboard/checkoutSystem/melonFruit"
-                      component={MelonFruit}
-                    />
-                    <Route
-                      path="/dashboard/checkoutSystem/rice"
-                      component={Rice}
-                    />
-                    <Route
-                      path="/dashboard/training/casher"
-                      component={Casher}
-                    />
-                    <Route
-                      path="/dashboard/training/tallyClerk"
-                      component={TallyClerk}
-                    />
-                    <Route
-                      path="/dashboard/management/staffManagement"
-                      component={StaffManagement}
-                    />
-                    <Route
-                      path="/dashboard/management/scheduling/next"
-                      component={SchedulingNext}
-                    />
-                    <Route
-                      path="/dashboard/management/scheduling/default"
-                      component={SchedulingDefault}
-                    />
-                    <Route
-                      path="/dashboard/management/changePassword"
-                      component={ChangePassword}
-                    />
-                  </Switch>
-                  <Divider />
-                </Panel>
-              </div>
-            </Content>
-            <Footer>
-              <MyFooter />
-            </Footer>
+            <Sidebar>
+              <SidebarNav />
+            </Sidebar>
+            <Container>
+              <Content>
+                <div className="container">
+                  <Header />
+                  <Panel shaded>
+                    <Switch>
+                      <Route
+                        path="/dashboard/welcome"
+                        component={Welcome}
+                      />
+                      <Route
+                        path="/dashboard/schedule/next"
+                        component={FreetimeNext}
+                      />
+                      <Route
+                        path="/dashboard/schedule/default"
+                        component={FreetimeDefault}
+                      />
+                      <Route
+                        path="/dashboard/checkoutSystem/greens"
+                        component={Greens}
+                      />
+                      <Route
+                        path="/dashboard/checkoutSystem/melonFruit"
+                        component={MelonFruit}
+                      />
+                      <Route
+                        path="/dashboard/checkoutSystem/rice"
+                        component={Rice}
+                      />
+                      <Route
+                        path="/dashboard/training/casher"
+                        component={Casher}
+                      />
+                      <Route
+                        path="/dashboard/training/tallyClerk"
+                        component={TallyClerk}
+                      />
+                      <Route
+                        path="/dashboard/management/staffManagement"
+                        component={StaffManagement}
+                      />
+                      <Route
+                        path="/dashboard/management/scheduling/next"
+                        component={SchedulingNext}
+                      />
+                      <Route
+                        path="/dashboard/management/scheduling/default"
+                        component={SchedulingDefault}
+                      />
+                      <Route
+                        path="/dashboard/management/changePassword"
+                        component={ChangePassword}
+                      />
+                    </Switch>
+                    
+                  </Panel>
+                </div>
+              </Content>
+              <Footer>
+                <MyFooter />
+              </Footer>
+            </Container>
           </Container>
-        </Container>
-      </Router>
+        </Router>
+      </div>
     );
   }
 }
 
-const mapStateToProps = ({ auth, user, users }) => {
+const mapStateToProps = ({ auth, user }) => {
   return {
     auth,
     user,
-    users,
   };
 };
 

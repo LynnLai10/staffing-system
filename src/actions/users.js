@@ -9,7 +9,7 @@ export const fetchToken = () => async (dispatch) => {
   const token = JSON.parse(sessionStorage.getItem("EG-token"));
   if (token) {
     dispatch({ type: FETCH_AUTH });
-    history.push("/dashboard");
+    history.push("/dashboard/welcome");
   } else {
     dispatch({ type: LOGOUT });
     history.push("/");
@@ -20,7 +20,7 @@ export const login = (data) => async (dispatch) => {
   sessionStorage.setItem("EG-token", JSON.stringify(data.data.login.token));
   dispatch({ type: FETCH_AUTH });
   dispatch({ type: FETCH_USER, payload: data.data.login.user })
-  history.push("/dashboard");
+  history.push("/dashboard/welcome");
 };
 
 export const logout = () => async (dispatch) => {

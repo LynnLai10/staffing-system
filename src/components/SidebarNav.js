@@ -13,7 +13,7 @@ class SidebarNav extends React.Component {
               <Nav.Item
                 eventKey="1"
                 icon={<Icon icon="dashboard" />}
-                href="/dashboard"
+                href="/dashboard/welcome"
               >
                 Dashboard
               </Nav.Item>
