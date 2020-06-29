@@ -25,6 +25,14 @@ export const schema_fetchSchedule = gql`
   }
 `;
 
+export const schema_createSchedule = gql`
+  mutation createSchedule($schedule_No: String!) {
+    createSchedule(schedule_No: $schedule_No) {
+      count
+    }
+  }
+`;
+
 export const schema_updateStaffs = gql`
   mutation UpdateStaffs(
     $oldStaffs: [UpdateSchedule_StaffsInput]
@@ -43,4 +51,3 @@ export const schema_resetSchedule = gql`
     }
   }
 `;
-
