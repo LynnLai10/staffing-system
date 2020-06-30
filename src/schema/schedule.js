@@ -51,3 +51,17 @@ export const schema_resetSchedule = gql`
     }
   }
 `;
+
+export const schema_mySchedule = gql`
+  query mySchedule ($schedule_No: String!) {
+    mySchedule(schedule_No: $schedule_No) {
+      id
+      schedule_day {
+        day_No
+      }
+      schedule_interval {
+        interval_No
+      }
+    }
+  }
+`

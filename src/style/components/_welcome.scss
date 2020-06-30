@@ -1,0 +1,32 @@
+.welcome__container {
+  width: fit-content;
+}
+
+.welcome__container :first-child {
+  margin-bottom: 0.5rem;
+}
+
+.welcome__user {
+  color: $bg-text;
+  font-weight: 900;
+  height: 12rem;
+  background: linear-gradient(
+    30deg,
+    $bg-blue,
+    $bg-white,
+  );
+}
+
+.welcome__user__icon {
+  text-align: center;
+}
+.welcome__lastLogin {
+  color: $bg-text;
+  font-weight: 900;
+  height: 12rem;
+  background: linear-gradient(
+    30deg,
+    $bg-white,
+    $bg-purple
+  );
+}

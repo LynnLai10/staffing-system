@@ -33,15 +33,14 @@ class StaffList extends React.Component {
                 width={800}
                 rowClassName={(rowData) => {
                   if (rowData && rowData.sex === "Male") {
-                    return 'staffList__tallyClerk'
+                    return 'tallyClerk'
                   } else if (rowData && rowData.sex === "Female") {
-                    return 'staffList__casher'
+                    return 'casher'
                   } else {
                     return ''
                   }
                 }}
                 autoHeight
-                hover
               >
                 <Column width={100} align="center">
                   <HeaderCell>Employee ID</HeaderCell>

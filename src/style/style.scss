@@ -8,14 +8,15 @@
 @import "./components/_schedule";
 @import "./components/_scheduleList";
 @import "./components/_scheduleListByStaff";
+@import "./components/_welcome";
 
 .container {
   margin: 20px 20px 20px 10px;
   border-top: solid 5px;
   border-image: linear-gradient(
       90deg,
-      rgba(18, 174, 201, 0.829),
-      rgba(149, 120, 255, 0.836)
+      $cyan,
+      $purple,
     )
     10;
 }
