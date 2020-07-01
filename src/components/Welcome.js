@@ -5,8 +5,8 @@ import { Query } from "@apollo/react-components";
 import { schema_mySchedule } from "../schema/schedule";
 import FreetimePeriod from "./Freetime/FreetimePeriod";
 import getDate from "../utils/getDate";
-import { Panel, Row, Col, Icon, Table, Loader, Alert } from "rsuite";
-const { Column, HeaderCell, Cell, Pagination } = Table;
+import { Panel, FlexboxGrid, Icon, Table, Loader, Alert } from "rsuite";
+const { Column, HeaderCell, Cell } = Table;
 require("moment-precise-range-plugin");
 
 class Welcome extends React.Component {
@@ -41,32 +41,29 @@ class Welcome extends React.Component {
     return [firstWeek, secondWeek];
   };
   renderUser = () => {
-    const { name, employeeId, sex, accountType } = this.props.user;
+    const { name, employeeId, sex, position } = this.props.user;
     return (
       <Panel bordered className="welcome__user">
-        <Row>
-          <Col md={8} className={`welcome__user__icon ${sex === "Male" ? "tallyClerk" : "casher"}`}>
+        <FlexboxGrid justify="space-around" align="middle">
+          <FlexboxGrid.Item
+            colspan={7}
+            className={`welcome__user__icon ${
+              sex === "Male" ? "tallyClerk" : "casher"
+            }`}
+          >
             <Icon icon="user-o" size="5x" />
-          </Col>
-          <Col md={5}>
+          </FlexboxGrid.Item>
+          <FlexboxGrid.Item colspan={5}>
             <p>Name:</p>
             <p>ID:</p>
             <p>Postion:</p>
-          </Col>
-          <Col md={11}>
+          </FlexboxGrid.Item>
+          <FlexboxGrid.Item colspan={12}>
             <p>{name}</p>
             <p>{employeeId}</p>
-            <p>
-              {accountType === "Admin"
-                ? sex === "Male"
-                  ? "Manager"
-                  : "Assistant Manager"
-                : sex === "Male"
-                ? "Tally Clerk"
-                : "Casher"}
-            </p>
-          </Col>
-        </Row>
+            <p>{position}</p>
+          </FlexboxGrid.Item>
+        </FlexboxGrid>
       </Panel>
     );
   };
@@ -76,19 +73,24 @@ class Welcome extends React.Component {
     const now = moment().format("YYYY-MM-DD");
     return (
       <Panel bordered className="welcome__lastLogin">
-        <Row>
-          <Col md={6} className={`welcome__user__icon ${sex === "Male" ? "tallyClerk" : "casher"}`}>
+        <FlexboxGrid justify="space-around">
+          <FlexboxGrid.Item
+            colspan={6}
+            className={`welcome__user__icon ${
+              sex === "Male" ? "tallyClerk" : "casher"
+            }`}
+          >
             <Icon icon="calendar" size="5x" />
-          </Col>
-          <Col md={6} >
-            <p className="welcome__lastlogin__first">Last Login:</p>
+          </FlexboxGrid.Item>
+          <FlexboxGrid.Item colspan={6}>
             <p>On Board:</p>
-          </Col>
-          <Col md={12}>
-            <p>{moment(lastLogin).format("dddd, Do MMM YYYY, HH:mm")}</p>
+            <p className="welcome__lastlogin__first">Last Login:</p>
+          </FlexboxGrid.Item>
+          <FlexboxGrid.Item colspan={10}>
             <p>{moment(employeedDays).preciseDiff(now)}</p>
-          </Col>
-        </Row>
+            <p>{moment(lastLogin).format("dddd, Do MMM YYYY, HH:mm")}</p>
+          </FlexboxGrid.Item>
+        </FlexboxGrid>
       </Panel>
     );
   };
@@ -96,10 +98,12 @@ class Welcome extends React.Component {
     const { schedule_No, startDate, endDate } = this.dates;
     return (
       <div className="welcome__container">
-        <Row>
-          <Col md={12}>{this.renderUser()}</Col>
-          <Col md={12}>{this.renderLastLogin()}</Col>
-        </Row>
+        <FlexboxGrid justify="space-between">
+          <FlexboxGrid.Item colspan={11}>{this.renderUser()}</FlexboxGrid.Item>
+          <FlexboxGrid.Item colspan={12}>
+            {this.renderLastLogin()}
+          </FlexboxGrid.Item>
+        </FlexboxGrid>
         <Query query={schema_mySchedule} variables={{ schedule_No }}>
           {({ loading, error, data }) => {
             if (loading) {
@@ -119,9 +123,9 @@ class Welcome extends React.Component {
             const mySchedule = this.filterData(data.mySchedule);
             return (
               <div>
-                <Panel bordered >
+                <Panel bordered>
                   <FreetimePeriod startDate={startDate} endDate={endDate} />
-                  <Table width={800} data={mySchedule} autoHeight >
+                  <Table width={800} data={mySchedule} autoHeight>
                     <Column width={100} align="center" fixed>
                       <HeaderCell>Week</HeaderCell>
                       <Cell dataKey="week" />

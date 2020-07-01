@@ -27,6 +27,7 @@ const model = Schema.Model({
   employeeId: StringType().isRequired("This field is required."),
   name: StringType().isRequired("This field is required."),
   sex: StringType().isRequired("This field is required."),
+  position: StringType().isRequired("This field is required."),
   accountType: StringType().isRequired("This field is required."),
 });
 
@@ -56,6 +57,7 @@ class StaffFormModal extends React.Component {
         employeeId: "",
         name: "",
         sex: "",
+        position: "",
         accountType: "",
         hireDate: new Date(),
         permanentStaff: false,
@@ -142,6 +144,17 @@ class StaffFormModal extends React.Component {
                         >
                           <Radio value={"Male"}>Male</Radio>
                           <Radio value={"Female"}>Female</Radio>
+                        </CustomField>
+                        <CustomField
+                          name="position"
+                          label="Position"
+                          accepter={RadioGroup}
+                          inline
+                        >
+                          <Radio value={"Manager"}>Manager</Radio>
+                          <Radio value={"Assistant Manager"}>Assistant Manager</Radio>
+                          <Radio value={"Tally Clerk"}>Tally Clerk</Radio>
+                          <Radio value={"Casher"}>Casher</Radio>
                         </CustomField>
                         <CustomField
                           name="accountType"

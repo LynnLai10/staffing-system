@@ -30,7 +30,7 @@ class StaffList extends React.Component {
             <div>
               <Table
                 data={data.users}
-                width={800}
+                width={900}
                 rowClassName={(rowData) => {
                   if (rowData && rowData.sex === "Male") {
                     return 'tallyClerk'
@@ -42,7 +42,7 @@ class StaffList extends React.Component {
                 }}
                 autoHeight
               >
-                <Column width={100} align="center">
+                <Column width={90} align="center">
                   <HeaderCell>Employee ID</HeaderCell>
                   <Cell dataKey="employeeId" />
                 </Column>
@@ -57,12 +57,17 @@ class StaffList extends React.Component {
                   <Cell dataKey="sex" />
                 </Column>
 
+                <Column width={155} align="center">
+                  <HeaderCell>Position</HeaderCell>
+                  <Cell dataKey="position" />
+                </Column>
+
                 <Column width={100} align="center">
                   <HeaderCell>Account Type</HeaderCell>
                   <Cell dataKey="accountType" />
                 </Column>
 
-                <Column width={150} align="center">
+                <Column width={120} align="center">
                   <HeaderCell>Hire Date</HeaderCell>
                   <Cell>
                     {(rowData) =>

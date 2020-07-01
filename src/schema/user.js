@@ -5,6 +5,7 @@ const dataTemplate = `
   employeeId
   accountType
   sex
+  position
   useDefaultFreetime
   hireDate
   permanentStaff
@@ -15,6 +16,7 @@ const variablesTemplate = `
   $employeeId: String!
   $name: String!
   $sex: String!
+  $position: String!
   $hireDate: String!
   $permanentStaff: Boolean!
   $accountType: String!
@@ -24,6 +26,7 @@ const inputTemplate = `
   employeeId: $employeeId
   name: $name
   sex: $sex
+  position: $position
   accountType: $accountType
   password: $employeeId
   hireDate: $hireDate
