@@ -12,7 +12,7 @@ import {
   Button,
   ButtonToolbar,
   Loader,
-  Alert
+  Alert,
 } from "rsuite";
 
 const { StringType } = Schema.Types;
@@ -41,20 +41,24 @@ class LoginForm extends React.Component {
         employeeId: "",
         password: "",
       },
+      formError: {},
     };
   }
 
   handleSubmit = (login) => {
+    if (!this.form.check()) {
+      Alert.error("Error");
+      return;
+    }
     login({
       variables: this.state.formValue,
     }).then((data) => {
-      this.props.login(data)
+      this.props.login(data);
     });
-
   };
 
   render() {
-    const { formValue } = this.state;
+    const { formValue, formError } = this.state;
     return (
       <Mutation mutation={schema_login}>
         {(login, { loading, error }) => (
@@ -65,8 +69,11 @@ class LoginForm extends React.Component {
                 this.setState({ formValue });
               }}
               formValue={formValue}
+              onCheck={(formError) => {
+                this.setState({ formError });
+              }}
               model={model}
-              onSubmit={() => this.handleSubmit(login)}
+              onSubmit={() => this.handleSubmit(login, formError)}
               className="login__form"
             >
               <TextField name="employeeId" label="Employee ID" />
@@ -77,16 +84,16 @@ class LoginForm extends React.Component {
                 </Button>
               </ButtonToolbar>
               <div>
-              {loading && (
-                <Loader
-                  backdrop
-                  center
-                  size="md"
-                  content={`Logging in ...`}
-                  vertical
-                />
-              )}
-              {error && Alert.error('Failed. Please try again.')}
+                {loading && (
+                  <Loader
+                    backdrop
+                    center
+                    size="md"
+                    content={`Logging in ...`}
+                    vertical
+                  />
+                )}
+                {error && Alert.error("Failed. Please try again.")}
               </div>
             </Form>
           </div>
