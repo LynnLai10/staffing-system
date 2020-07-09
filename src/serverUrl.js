@@ -6,6 +6,6 @@ export default (isDev, grahql) => {
       return 'http://localhost:5000/'
     }
   } else {
-    return 'https://staffing-system-database.herokuapp.com/'
+    return 'https://tongli-eg-staffing-system.herokuapp.com/'
   }
 }
