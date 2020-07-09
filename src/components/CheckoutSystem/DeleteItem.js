@@ -3,6 +3,7 @@ import axios from "axios";
 import { Mutation } from "@apollo/react-components";
 import { schema_deleteItem, schema_items } from "../../schema/item";
 import { Modal, Button, Icon, IconButton, Alert } from "rsuite";
+import serverUrl from '../../serverUrl'
 
 class DeleteItem extends React.Component {
   constructor(props) {
@@ -32,7 +33,7 @@ class DeleteItem extends React.Component {
     //delete img.jpg at public/img
     if (fileKeys.length !== 0)
       for (let i = 0; i < fileKeys.length; i++) {
-        axios.delete(`http://localhost:4000/checkout/delete/${category}/${fileKeys[i]}.jpg`);
+        axios.delete(`${serverUrl(process.env.NODE_ENV === "development")}checkout/delete/${category}/${fileKeys[i]}.jpg`);
       }
   };
   render() {

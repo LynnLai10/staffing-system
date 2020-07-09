@@ -14,7 +14,7 @@ class Login extends React.Component {
       <div className="login__container">
         <div className="blur"></div>
         <div className="login__header">
-          <img src="img/tongliLogo.png" alt="Logo" className="login__logo"/>
+          <img src="tongliLogo.png" alt="Logo" className="login__logo"/>
           <div className="loging__header__content">
             <h1>Staffing System</h1>
             <h3>Tongli Supermarket - Eastgradens</h3>

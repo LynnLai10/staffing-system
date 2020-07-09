@@ -1,6 +1,7 @@
 import React from "react";
 import axios from "axios";
 import { Mutation } from "@apollo/react-components";
+import serverUrl from '../../serverUrl'
 import {
   schema_createItem,
   schema_updateItem,
@@ -121,7 +122,7 @@ class ItemFormModal extends React.Component {
     if (removeFiles.length !== 0) {
       for (let i = 0; i < removeFiles.length; i++) {
         axios.delete(
-          `http://localhost:4000/checkout/delete/${this.props.category}/${removeFiles[i].name}`
+          `${serverUrl(process.env.NODE_ENV === "development")}checkout/delete/${this.props.category}/${removeFiles[i].name}`
         );
       }
     }

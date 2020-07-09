@@ -4,6 +4,7 @@ import { Query } from "@apollo/react-components";
 import { schema_items } from "../../schema/item";
 import ItemFormModal from "./ItemFormModal";
 import Item from "./Item";
+import serverUrl from '../../serverUrl'
 import {
   FlexboxGrid,
   Divider,
@@ -130,7 +131,7 @@ class ItemsList extends React.Component {
                   {data.items.items.map((item) => {
                     const imgURLs = item.fileKeys
                     .split(",")
-                    .map((el) => `http://localhost:4000/img/${category}/${el}.jpg`)
+                    .map((el) => `${serverUrl(process.env.NODE_ENV === "development")}img/${category}/${el}.jpg`)
                     return (
                       <Item
                         data={item}
