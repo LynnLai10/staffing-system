@@ -30,7 +30,7 @@ class StaffList extends React.Component {
             <div>
               <Table
                 data={data.users}
-                width={900}
+                width={910}
                 rowClassName={(rowData) => {
                   if (rowData && rowData.sex === "Male") {
                     return 'tallyClerk'
@@ -57,7 +57,7 @@ class StaffList extends React.Component {
                   <Cell dataKey="sex" />
                 </Column>
 
-                <Column width={155} align="center">
+                <Column width={165} align="center">
                   <HeaderCell>Position</HeaderCell>
                   <Cell dataKey="position" />
                 </Column>

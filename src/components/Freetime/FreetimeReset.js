@@ -1,4 +1,5 @@
 import React from "react";
+import { connect } from "react-redux";
 import { Mutation } from "@apollo/react-components";
 import {
   schema_resetFreetimes,
@@ -12,6 +13,7 @@ class FreetimeReset extends React.Component {
     super(props);
     this.state = {
       show: false,
+      color: this.props.user.sex === "Female" ? "freetimeCasher__btn" : ""
     };
     this.schedule_No = this.props.isDefault ? "0" : this.props.schedule_No;
   }
@@ -35,12 +37,12 @@ class FreetimeReset extends React.Component {
     });
   };
   render() {
-    const { show } = this.state;
+    const { show, color } = this.state;
     const { isDefault } = this.props;
     return (
       <div>
         <ButtonToolbar>
-          <Button appearance="ghost" onClick={this.open}>
+          <Button appearance="primary" onClick={this.open} className={`${color}__reset`} size="lg">
             Reset
           </Button>
         </ButtonToolbar>
@@ -81,13 +83,14 @@ class FreetimeReset extends React.Component {
                         this.handleSubmit(resetFreetime);
                         this.close();
                       }}
+                      className={`${color}__reset`}
                       appearance="primary"
                     >
                       Reset
                     </Button>
                     <Button
                       onClick={this.close}
-                      appearance="subtle"
+                      className={`${color}__cancel`}
                     >
                       Cancel
                     </Button>
@@ -102,5 +105,9 @@ class FreetimeReset extends React.Component {
     );
   }
 }
+const mapStateToProps = ({ user }) => {
+  return { user: user.user };
+};
 
-export default FreetimeReset;
+export default connect(mapStateToProps)(FreetimeReset);
+

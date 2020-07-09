@@ -1,9 +1,8 @@
-import React from 'react'
+import React from "react";
+import ItemsList from "./ItemsList";
 
-const Rice = () => {
-  return (
-    <div>Rice</div>
-  )
-}
+const Rice = () => (
+  <ItemsList category="rice" />
+)
 
-export default Rice
+export default Rice;

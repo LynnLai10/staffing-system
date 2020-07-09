@@ -49,11 +49,24 @@
 }
 
 .freetime__btn {
-    // color: #8685856e;
     font-size: $l-size;
     width: $xxl-size;
     height: $xxl-size;
     margin: 0.8rem 0.5rem;
+}
+
+.freetimeCahser__btn {
+    color: $purple;
+    background-color: $light-purple;
+}
+
+.freetimeCasher__btn__reset {
+    color: white;
+    background-color: $purple;
+}
+
+.freetimeCasher__btn__cancel {
+    border-color: $purple;
 }
 
 .freetimeTallyClerk__date {
@@ -73,5 +86,6 @@
     font-size: 1.5rem;
     text-shadow: rgb(255, 255, 255) 0 0 15px;
 }
+
 
 

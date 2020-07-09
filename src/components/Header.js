@@ -4,12 +4,6 @@ import * as actions from "../actions/users";
 import { Button, Alert } from "rsuite";
 
 class Header extends React.Component {
-  componentDidMount() {
-    // if (!this.props.auth.authenticated) {
-    //   this.props.fetchToken();
-    // }
-  }
-
   handleClick = () => {
     this.props.logout();
     Alert.success("Logout Successfully.");
@@ -25,8 +19,9 @@ class Header extends React.Component {
         <div>
           <Button
             onClick={this.handleClick}
-            appearance="primary"
+            appearance="default"
             className="header_btn"
+            size="lg"
           >
             Logout
           </Button>

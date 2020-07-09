@@ -62,6 +62,7 @@ class StaffFormModal extends React.Component {
         hireDate: new Date(),
         permanentStaff: false,
       },
+      formError: {},
       originalId: "",
       show: false,
     };
@@ -90,7 +91,10 @@ class StaffFormModal extends React.Component {
     });
   };
   handleSubmit = (mutate) => {
-    const { originalId, formValue } = this.state;
+    if (!this.form.check()) {
+      Alert.error('Error');
+    } else {
+      const { originalId, formValue } = this.state;
     const variables = this.props.isEdit
       ? {
           ...formValue,
@@ -107,10 +111,11 @@ class StaffFormModal extends React.Component {
       refetchQueries: [{ query: schema_staffList }],
     });
     this.close();
+    }
   };
   render() {
     const { isEdit } = this.props;
-    const { formValue, show } = this.state;
+    const { formValue, show, formError } = this.state;
     const schema = isEdit ? schema_updateStaff : schema_createStaff;
     return (
       <div>
@@ -133,14 +138,19 @@ class StaffFormModal extends React.Component {
                         onChange={this.handleChange}
                         formValue={formValue}
                         model={model}
+                        onCheck={formError => {
+                          console.log(formError, 'formError');
+                          this.setState({ formError });
+                        }}
                       >
-                        <CustomField name="employeeId" label="Employee ID" />
-                        <CustomField name="name" label="Name" />
+                        <CustomField name="employeeId" label="Employee ID" error={formError.employeeId} />
+                        <CustomField name="name" label="Name" error={formError.name}/>
                         <CustomField
                           name="sex"
                           label="Sex"
                           accepter={RadioGroup}
                           inline
+                          error={formError.sex}
                         >
                           <Radio value={"Male"}>Male</Radio>
                           <Radio value={"Female"}>Female</Radio>
@@ -150,6 +160,7 @@ class StaffFormModal extends React.Component {
                           label="Position"
                           accepter={RadioGroup}
                           inline
+                          error={formError.position}
                         >
                           <Radio value={"Manager"}>Manager</Radio>
                           <Radio value={"Assistant Manager"}>Assistant Manager</Radio>
@@ -161,6 +172,7 @@ class StaffFormModal extends React.Component {
                           label="Account Type"
                           accepter={RadioGroup}
                           inline
+                          error={formError.accountType}
                         >
                           <Radio value={"Admin"}>Admin</Radio>
                           <Radio value={"Staff"}>Staff</Radio>
@@ -175,12 +187,14 @@ class StaffFormModal extends React.Component {
                           cleanable
                           placeholder="Select a date"
                           style={{ width: 160 }}
+                          error={formError.hireDate}
                         ></CustomField>
                         <CustomField
                           name="permanentStaff"
                           label="Permanent Staff"
                           accepter={RadioGroup}
                           inline
+                          error={formError.permanentStaff}
                         >
                           <Radio value={true}>Yes</Radio>
                           <Radio value={false}>No</Radio>

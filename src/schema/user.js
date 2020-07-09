@@ -73,7 +73,6 @@ const schema_createStaff_content = `
    + variablesTemplate +  
   `) {
     createUser(
-      auth: "Eg80949597"
       data: {`
        + inputTemplate +  
       `}

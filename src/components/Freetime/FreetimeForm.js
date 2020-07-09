@@ -128,13 +128,3 @@ class FreetimeForm extends React.Component {
 }
 
 export default FreetimeForm;
-
-// update={(cache, { data: { updateFreetime } }) => {
-//   let { myFreetimes } = cache.readQuery({ query: schema_fetchFreetime, variables: { schedule_No: item.day_No.split('_')[0] } })
-//   myFreetimes.splice(index, 1, updateFreetime)
-//   cache.writeQuery({
-//     query: schema_fetchFreetime,
-//     variables: { schedule_No: item.day_No.split('_')[0] },
-//     data: { myFreetimes: myFreetimes.concat() }
-//   })
-// }}

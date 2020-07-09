@@ -37,22 +37,20 @@ class SidebarNav extends React.Component {
                 title="Checkout System"
                 icon={<Icon icon="desktop" />}
               >
-                <Dropdown.Menu eventKey="3-1" title="Fruit & Vegetable">
-                  <Dropdown.Item
-                    eventKey="3-2-1"
-                    href="/dashboard/checkoutSystem/greens"
-                  >
-                    Greens
-                  </Dropdown.Item>
-                  <Dropdown.Item
-                    eventKey="3-2-2"
-                    href="/dashboard/checkoutSystem/melonFruit"
-                  >
-                    Melon & Fruit
-                  </Dropdown.Item>
-                </Dropdown.Menu>
+                <Dropdown.Item
+                  eventKey="3-1"
+                  href="/dashboard/checkoutSystem/greens"
+                >
+                  Greens
+                </Dropdown.Item>
                 <Dropdown.Item
                   eventKey="3-2"
+                  href="/dashboard/checkoutSystem/melonFruit"
+                >
+                  Melon & Fruit
+                </Dropdown.Item>
+                <Dropdown.Item
+                  eventKey="3-3"
                   href="/dashboard/checkoutSystem/rice"
                 >
                   Rice

@@ -40,10 +40,16 @@ class Welcome extends React.Component {
     }
     return [firstWeek, secondWeek];
   };
+
   renderUser = () => {
     const { name, employeeId, sex, position } = this.props.user;
     return (
-      <Panel bordered className="welcome__user">
+      <Panel
+        bordered
+        className={`welcome__user ${
+          sex === "Male" ? "bg-tallyClerk" : "bg-casher"
+        }`}
+      >
         <FlexboxGrid justify="space-around" align="middle">
           <FlexboxGrid.Item
             colspan={7}
@@ -53,12 +59,12 @@ class Welcome extends React.Component {
           >
             <Icon icon="user-o" size="5x" />
           </FlexboxGrid.Item>
-          <FlexboxGrid.Item colspan={5}>
+          <FlexboxGrid.Item colspan={6}>
             <p>Name:</p>
             <p>ID:</p>
             <p>Postion:</p>
           </FlexboxGrid.Item>
-          <FlexboxGrid.Item colspan={12}>
+          <FlexboxGrid.Item colspan={11}>
             <p>{name}</p>
             <p>{employeeId}</p>
             <p>{position}</p>
@@ -71,23 +77,26 @@ class Welcome extends React.Component {
     const { sex, hireDate, lastLogin } = this.props.user;
     const employeedDays = moment(new Date(hireDate)).format("YYYY-MM-DD");
     const now = moment().format("YYYY-MM-DD");
+    const diff = moment.preciseDiff(employeedDays, now, true);
     return (
       <Panel bordered className="welcome__lastLogin">
         <FlexboxGrid justify="space-around">
           <FlexboxGrid.Item
-            colspan={6}
+            colspan={5}
             className={`welcome__user__icon ${
               sex === "Male" ? "tallyClerk" : "casher"
             }`}
           >
             <Icon icon="calendar" size="5x" />
           </FlexboxGrid.Item>
-          <FlexboxGrid.Item colspan={6}>
+          <FlexboxGrid.Item colspan={5}>
             <p>On Board:</p>
             <p className="welcome__lastlogin__first">Last Login:</p>
           </FlexboxGrid.Item>
-          <FlexboxGrid.Item colspan={10}>
-            <p>{moment(employeedDays).preciseDiff(now)}</p>
+          <FlexboxGrid.Item colspan={13}>
+            <p>{`${diff.years !== 0 ? `${diff.years}years` : ""} ${
+              diff.months !== 0 ? `${diff.months}months` : ""
+            } ${diff.days !== 0 ? `${diff.days}days` : ""}`}</p>
             <p>{moment(lastLogin).format("dddd, Do MMM YYYY, HH:mm")}</p>
           </FlexboxGrid.Item>
         </FlexboxGrid>

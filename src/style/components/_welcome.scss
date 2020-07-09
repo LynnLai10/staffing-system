@@ -10,11 +10,6 @@
   color: $bg-text;
   font-weight: 900;
   height: 12rem;
-  background: linear-gradient(
-    30deg,
-    $bg-blue,
-    $bg-white,
-  );
 }
 
 .welcome__user__icon {
@@ -24,9 +19,5 @@
   color: $bg-text;
   font-weight: 900;
   height: 12rem;
-  background: linear-gradient(
-    30deg,
-    $bg-white,
-    $bg-blue
-  );
+  background-image: linear-gradient(45deg, #f1fcf9 0%, #e3fdf5 100%);
 }

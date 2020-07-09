@@ -22,11 +22,9 @@ import ChangePassword from "./Management/ChangePassword";
 
 class Dashboard extends React.Component {
   componentDidMount() {
-    // this.props.fetchUser()
-    // if (this.props.auth.authenticated) {
-    //   console.log(this.props.auth.authenticated)
-    //   history.push('/')
-    // }
+    if (!this.props.auth.authenticated) {
+      history.push('/')
+    }
   }
   render() {
     return (

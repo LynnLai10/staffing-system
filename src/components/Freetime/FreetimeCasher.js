@@ -1,8 +1,6 @@
 import React from "react";
 import { Mutation } from "@apollo/react-components";
-import {
-  schema_updateFreetime,
-} from "../../schema/freetime";
+import { schema_updateFreetime } from "../../schema/freetime";
 import { Button } from "rsuite";
 
 class FreetimeCasher extends React.Component {
@@ -25,14 +23,14 @@ class FreetimeCasher extends React.Component {
   };
 
   render() {
-    const { isDefault, dates, index, item } = this.props
+    const { isDefault, dates, index, item } = this.props;
     return (
       <Mutation key={index} mutation={schema_updateFreetime}>
         {(updateFreetime) => (
           <Button
-            appearance={item.availability === "full" ? "primary" : "ghost"}
-            className="freetime__btn"
+            className="freetime__btn freetimeCahser__btn"
             onClick={() => this.handleClick(updateFreetime, item)}
+            active={item.availability === "full" ? false : true}
           >
             {isDefault ? index + 1 : dates[index]}
           </Button>

@@ -1,0 +1,57 @@
+.itemsList__container {
+  display: flex;
+  flex-direction: column;
+}
+
+.itemsList__panel {
+  display: "inline-block";
+  padding: 2rem 1rem;
+  margin: 1rem;
+}
+
+.itemsList__description {
+  text-align: center;
+  margin-top: 1rem;
+}
+
+.itemsList__description :first-child {
+  display: inline-block;
+  border-bottom: solid 1px;
+  margin-bottom: 0.2rem;
+}
+
+.itemsList__btn {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 0.5rem;
+}
+
+.itemsList__header {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  margin: 0 2rem;
+}
+
+.itemsList__header h3 {
+  margin-right: auto;
+}
+
+.itemsList__carousel {
+  width: 200px;
+  height: auto;
+}
+.itemsList__sortBy {
+  width: 16rem;
+  margin-left: 1rem;
+}
+
+.itemsList__footer {
+  margin: 0 auto;
+}
+
+//itemFormModal
+.itemFormModal___slider {
+  width: 20rem;
+  margin-left: 3rem;
+}
