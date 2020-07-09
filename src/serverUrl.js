@@ -6,6 +6,10 @@ export default (isDev, grahql) => {
       return 'http://localhost:5000/'
     }
   } else {
-    return 'https://tongli-eg-staffing-system.herokuapp.com/'
+    if (grahql) {
+      return 'https://staffing-system-database.herokuapp.com/'
+    } else {
+      return 'https://tongli-eg-staffing-system.herokuapp.com/'
+    }
   }
 }
