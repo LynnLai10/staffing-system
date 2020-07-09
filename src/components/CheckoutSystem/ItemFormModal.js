@@ -215,7 +215,7 @@ class ItemFormModal extends React.Component {
                       <div>
                         <Uploader
                           autoUpload={false}
-                          action={`http://localhost:4000/checkout/${category}`}
+                          action={`${serverUrl(process.env.NODE_ENV === "development")}checkout/${category}`}
                           encType="multipart/form-data"
                           name="checkout"
                           onChange={this.handleUploaderChange}
