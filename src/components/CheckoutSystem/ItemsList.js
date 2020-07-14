@@ -131,7 +131,7 @@ class ItemsList extends React.Component {
                   {data.items.items.map((item) => {
                     const imgURLs = item.fileKeys
                     .split(",")
-                    .map((el) => `${serverUrl(process.env.NODE_ENV === "development")}img/${category}/${el}.jpg`)
+                    .map((el) => `${serverUrl(process.env.NODE_ENV === "development")}checkout/${category}/${el}.jpg`)
                     return (
                       <Item
                         data={item}

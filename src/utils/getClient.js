@@ -5,7 +5,7 @@ import { InMemoryCache } from 'apollo-cache-inmemory';
 import serverUrl from '../serverUrl'
 
 const httpLink = createHttpLink({
-  uri: serverUrl(process.env.NODE_ENV === "development", true),
+  uri: serverUrl(process.env.NODE_ENV === "development"),
 });
 
 const authLink = setContext((_, { headers }) => {
