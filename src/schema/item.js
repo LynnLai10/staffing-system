@@ -5,7 +5,7 @@ const dataTemplate = `
   description_cn
   popularity
   category
-  fileKeys
+  URLs
 `;
 
 const variablesTemplate = `
@@ -13,7 +13,7 @@ const variablesTemplate = `
   $description_cn: String!
   $popularity: Int!
   $category: String!
-  $fileKeys: String!
+  $URLs: String
 `;
 
 const inputTemplate = `
@@ -21,7 +21,7 @@ const inputTemplate = `
   description_cn: $description_cn
   popularity: $popularity
   category: $category
-  fileKeys: $fileKeys
+  URLs: $URLs
 `;
 
 //-------------------------------------------------------------------

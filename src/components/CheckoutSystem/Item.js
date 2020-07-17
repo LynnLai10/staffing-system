@@ -21,11 +21,11 @@ class Item extends React.Component {
                 />
               ) : (
                 <Carousel autoplay className="itemsList__carousel">
-                  {imgURLs.map((imgURL) => (
+                  {imgURLs.map((imgURL, index) => (
                     <img
-                      src={imgURL + "?r=" + Math.random().toString()}
+                      src={imgURL}
                       alt={category}
-                      key={imgURL.split(",").pop()}
+                      key={index}
                     />
                   ))}
                 </Carousel>
@@ -50,6 +50,7 @@ class Item extends React.Component {
                 <DeleteItem
                   category={category}
                   data={data}
+                  imgURLs={imgURLs}
                   variables={variables}
                 />
               </ButtonGroup>

@@ -1,7 +1,8 @@
 import React from "react";
 import axios from "axios";
+import _ from "lodash";
 import { Mutation } from "@apollo/react-components";
-import serverUrl from '../../serverUrl'
+import serverUrl from "../../serverUrl";
 import {
   schema_createItem,
   schema_updateItem,
@@ -57,10 +58,11 @@ class ItemFormModal extends React.Component {
         description_cn: "",
         popularity: 3,
         category: this.props.category,
-        fileKeys: "",
+        URLs: "",
       },
       formError: {},
       show: false,
+      doSubmit: false,
       id: "",
       uploadFiles: [],
       removeFiles: [],
@@ -69,19 +71,37 @@ class ItemFormModal extends React.Component {
   }
   //modal function
   close = () => {
+    //if do not submit, reserve last version of images
+    if (!this.state.doSubmit) {
+      const prevFiles = this.state.formValue.URLs
+        ? this.state.formValue.URLs.split(",").map((item) => item.split("/").pop())
+        : [];
+      const uploadFiles = this.state.uploadFiles.map((item) => item.name);
+      const removeFiles = _.difference(uploadFiles, prevFiles);
+      if (removeFiles.length !== 0) {
+        for (let i = 0; i < removeFiles.length; i++) {
+          axios.delete(
+            `${serverUrl(
+              process.env.NODE_ENV === "development"
+            )}checkout/delete/${this.props.category}/${removeFiles[i]}`
+          );
+        }
+      }
+    }
+    //re-initial formValue
     this.setState(this.initialState);
   };
   open = () => {
     this.setState({ show: true });
+    //edit data, import data to fromValue
     if (this.props.isEdit) {
       const { data, imgURLs } = this.props;
-      delete data.__typename;
       this.setState({
         id: data.id,
         formValue: data,
         uploadFiles: imgURLs.map((item, index) => ({
           name: item.split("/").pop(),
-          fileKey: data.fileKeys.split(",")[index],
+          fileKey: index.toString(),
           url: item,
         })),
       });
@@ -96,13 +116,19 @@ class ItemFormModal extends React.Component {
     if (!this.form.check()) {
       Alert.error("Error");
     } else {
-      const { id, formValue } = this.state;
+      const { id, formValue, uploadFiles, removeFiles } = this.state;
+      //transform files url from array to string
+      const data = {
+        ...formValue,
+        URLs: uploadFiles.map((item) => item.url).join(","),
+      };
+      //if edit data, insert its original id
       const variables = this.props.isEdit
-        ? formValue
-        : {
-            ...formValue,
+        ? {
+            ...data,
             id,
-          };
+          }
+        : data;
       mutate({
         variables,
         refetchQueries: [
@@ -112,38 +138,51 @@ class ItemFormModal extends React.Component {
           },
         ],
       });
-      this.uploader.start()
-    }
-  };
-  handleMutationComplete = () => {
-    const { removeFiles } = this.state;
-    this.close();
-    Alert.success("Success.");
-    if (removeFiles.length !== 0) {
-      for (let i = 0; i < removeFiles.length; i++) {
-        axios.delete(
-          `${serverUrl(process.env.NODE_ENV === "development")}checkout/delete/${this.props.category}/${removeFiles[i].name}`
-        );
+      //execute to remove files
+      if (removeFiles.length !== 0) {
+        for (let i = 0; i < removeFiles.length; i++) {
+          axios.delete(
+            `${serverUrl(
+              process.env.NODE_ENV === "development"
+            )}checkout/delete/${this.props.category}/${removeFiles[i].name}`
+          );
+        }
       }
     }
   };
-
-  //uplaod function
-  handleUploaderChange = (value) => {
-    this.setState((prevState) => ({
-      formValue: {
-        ...prevState.formValue,
-        fileKeys: value.map((item) => item.fileKey).join(","),
-      },
-      uploadFiles: value,
-    }));
+  handleMutationComplete = () => {
+    this.setState({
+      doSubmit: true,
+    });
+    this.close();
+    Alert.success("Success.");
   };
   handleRemove = (value) => {
-    if (!value.hasOwnProperty("blobFile")) {
-      this.setState((prevState) => ({
-        removeFiles: [...prevState.removeFiles, value],
-      }));
-    }
+    //on hold remove files
+    const removeFile = this.state.uploadFiles.find(
+      (item) => item.fileKey === value.fileKey
+    );
+    //update uploadFiles and on hold removeFiles
+    this.setState((prevState) => ({
+      uploadFiles: prevState.uploadFiles.filter(
+        (item) => value.fileKey !== item.fileKey
+      ),
+      removeFiles: [...prevState.removeFiles, removeFile],
+    }));
+  };
+
+  handleSuccess = (res, file) => {
+    //return image url from aws s3 bucket
+    this.setState((prevState) => ({
+      uploadFiles: [
+        ...prevState.uploadFiles,
+        {
+          name: res.Location.split("/").pop(),
+          fileKey: file.fileKey,
+          url: res.Location,
+        },
+      ],
+    }));
   };
   render() {
     const { isEdit, category } = this.props;
@@ -154,10 +193,6 @@ class ItemFormModal extends React.Component {
         <Modal show={show} onHide={this.close} size="xs">
           <Mutation mutation={schema} onCompleted={this.handleMutationComplete}>
             {(mutate, { loading, error }) => {
-              const uploadData = {
-                fileKeys: formValue.fileKeys,
-                originalName: uploadFiles.map((item) => item.name).join(","),
-              };
               return (
                 <div>
                   <Modal.Header>
@@ -214,13 +249,13 @@ class ItemFormModal extends React.Component {
                       ></CustomField>
                       <div>
                         <Uploader
-                          autoUpload={false}
-                          action={`${serverUrl(process.env.NODE_ENV === "development")}checkout/${category}`}
+                          action={`${serverUrl(
+                            process.env.NODE_ENV === "development"
+                          )}checkout/${category}`}
                           encType="multipart/form-data"
                           name="checkout"
-                          onChange={this.handleUploaderChange}
                           onRemove={this.handleRemove}
-                          data={uploadData}
+                          onSuccess={this.handleSuccess}
                           defaultFileList={uploadFiles}
                           accept="image/*"
                           listType="picture"

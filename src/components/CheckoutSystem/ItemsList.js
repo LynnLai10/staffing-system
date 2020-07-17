@@ -4,7 +4,6 @@ import { Query } from "@apollo/react-components";
 import { schema_items } from "../../schema/item";
 import ItemFormModal from "./ItemFormModal";
 import Item from "./Item";
-import serverUrl from '../../serverUrl'
 import {
   FlexboxGrid,
   Divider,
@@ -129,9 +128,6 @@ class ItemsList extends React.Component {
                 <Divider />
                 <FlexboxGrid justify="center">
                   {data.items.items.map((item) => {
-                    const imgURLs = item.fileKeys
-                    .split(",")
-                    .map((el) => `${serverUrl(process.env.NODE_ENV === "development")}checkout/${category}/${el}.jpg`)
                     return (
                       <Item
                         data={item}
@@ -139,7 +135,7 @@ class ItemsList extends React.Component {
                         category={category}
                         variables={variables}
                         key={item.id}
-                        imgURLs={imgURLs}
+                        imgURLs={item.URLs.split(",")}
                       />
                     )
                   })}
