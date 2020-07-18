@@ -19,7 +19,6 @@ class DeleteItem extends React.Component {
     this.setState({ show: true });
   };
   handleSubmit = (deleteItem) => {
-    console.log(this.props.imgURLs)
     const { id } = this.props.data;
     const { category, imgURLs } = this.props;
     const fileNames = imgURLs.map(item => item.split("/").pop())
@@ -34,7 +33,7 @@ class DeleteItem extends React.Component {
     //delete img.jpg at public/img
     if (fileNames.length !== 0)
       for (let i = 0; i < fileNames.length; i++) {
-        axios.delete(`${serverUrl(process.env.NODE_ENV === "development")}checkout/delete/${category}/${fileNames[i]}`);
+        axios.delete(`${process.env.REACT_APP_SERVER_ENDPOINT}/checkout/delete/${category}/${fileNames[i]}`);
       }
   };
   render() {

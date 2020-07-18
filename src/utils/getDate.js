@@ -6,7 +6,7 @@ export default (thisWeek) => {
   let date =
     moment().isoWeek() % 2 === 0
       ? moment().startOf("isoWeek").subtract(7,"days")
-      : moment().startOf("isoWeek").add(7, "days");
+      : moment().startOf("isoWeek");
   //get the first day of the fortnight based on this schedule or next schedule
   const startDate = thisWeek? moment(date) : moment(date).add(14, "days");
   //get date number of the fortnight

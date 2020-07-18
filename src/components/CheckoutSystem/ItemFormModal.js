@@ -81,9 +81,7 @@ class ItemFormModal extends React.Component {
       if (removeFiles.length !== 0) {
         for (let i = 0; i < removeFiles.length; i++) {
           axios.delete(
-            `${serverUrl(
-              process.env.NODE_ENV === "development"
-            )}checkout/delete/${this.props.category}/${removeFiles[i]}`
+            `${process.env.REACT_APP_SERVER_ENDPOINT}/checkout/delete/${this.props.category}/${removeFiles[i]}`
           );
         }
       }
@@ -142,9 +140,7 @@ class ItemFormModal extends React.Component {
       if (removeFiles.length !== 0) {
         for (let i = 0; i < removeFiles.length; i++) {
           axios.delete(
-            `${serverUrl(
-              process.env.NODE_ENV === "development"
-            )}checkout/delete/${this.props.category}/${removeFiles[i].name}`
+            `${process.env.REACT_APP_SERVER_ENDPOINT}/checkout/delete/${this.props.category}/${removeFiles[i].name}`
           );
         }
       }
@@ -249,9 +245,7 @@ class ItemFormModal extends React.Component {
                       ></CustomField>
                       <div>
                         <Uploader
-                          action={`${serverUrl(
-                            process.env.NODE_ENV === "development"
-                          )}checkout/${category}`}
+                          action={`${process.env.REACT_APP_SERVER_ENDPOINT}/checkout/${category}`}
                           encType="multipart/form-data"
                           name="checkout"
                           onRemove={this.handleRemove}
