@@ -3,7 +3,6 @@ import axios from "axios";
 import { Mutation } from "@apollo/react-components";
 import { schema_deleteItem, schema_items } from "../../schema/item";
 import { Modal, Button, Icon, IconButton, Alert } from "rsuite";
-import serverUrl from '../../serverUrl'
 
 class DeleteItem extends React.Component {
   constructor(props) {

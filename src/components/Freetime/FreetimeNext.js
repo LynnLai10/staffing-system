@@ -36,7 +36,11 @@ class FreetimeNext extends React.Component {
           <p>Use Default Setting</p>
         </div>
         {!data.me.useDefaultFreetime && (
-          <FreetimeForm isDefault={false} dates={this.props.dates} isTallyClerk={this.props.user.sex === "Male"}/>
+          <FreetimeForm
+            isDefault={false}
+            dates={this.props.dates}
+            isTallyClerk={this.props.user.sex === "Male"}
+          />
         )}
       </div>
     );
@@ -46,42 +50,49 @@ class FreetimeNext extends React.Component {
     return (
       <div>
         <PanelNav activeKey={"next"} path={"schedule"} />
-        <Query query={schema_me}>
-          {({ loading, error, data }) => {
-            if (loading) {
+        {this.props.dates.freetimeDisabled ? (
+          <h5 className="freetime__disabled">
+            Sorry. Your freetime for the next schedule has been issued. Unable
+            to modify.
+          </h5>
+        ) : (
+          <Query query={schema_me}>
+            {({ loading, error, data }) => {
+              if (loading) {
+                return (
+                  <Loader
+                    backdrop
+                    center
+                    size="md"
+                    content={`Loading...`}
+                    vertical
+                  />
+                );
+              }
+              if (error) {
+                return Alert.error("Failed. Please try again.");
+              }
               return (
-                <Loader
-                  backdrop
-                  center
-                  size="md"
-                  content={`Loading...`}
-                  vertical
-                />
+                <Mutation mutation={schema_changeUseDefault}>
+                  {(changeUseDefault, { loading }) => {
+                    if (loading) {
+                      return (
+                        <Loader
+                          backdrop
+                          center
+                          size="md"
+                          content={`Loading...`}
+                          vertical
+                        />
+                      );
+                    }
+                    return this.renderToggleFreetime(changeUseDefault, data);
+                  }}
+                </Mutation>
               );
-            }
-            if (error) {
-              return Alert.error("Failed. Please try again.");
-            }
-            return (
-              <Mutation mutation={schema_changeUseDefault}>
-                {(changeUseDefault, { loading }) => {
-                  if (loading) {
-                    return (
-                      <Loader
-                        backdrop
-                        center
-                        size="md"
-                        content={`Loading...`}
-                        vertical
-                      />
-                    );
-                  }
-                  return this.renderToggleFreetime(changeUseDefault, data);
-                }}
-              </Mutation>
-            );
-          }}
-        </Query>
+            }}
+          </Query>
+        )}
       </div>
     );
   }

@@ -3,13 +3,23 @@ import { connect } from "react-redux";
 import PanelNav from "../PanelNav";
 import FreetimeForm from "./FreetimeForm";
 
-
 class FreetimeDeafult extends React.Component {
   render() {
     return (
       <div>
         <PanelNav activeKey={"default"} path={"schedule"} />
-        <FreetimeForm isDefault dates={this.props.dates} isTallyClerk={this.props.user.sex === "Male"}/>
+        {this.props.dates.freetimeDisabled ? (
+          <h5 className="freetime__disabled">
+            Sorry. Your freetime for the next schedule has been issued. Unable
+            to modify.
+          </h5>
+        ) : (
+          <FreetimeForm
+            isDefault
+            dates={this.props.dates}
+            isTallyClerk={this.props.user.sex === "Male"}
+          />
+        )}
       </div>
     );
   }

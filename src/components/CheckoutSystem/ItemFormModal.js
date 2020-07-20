@@ -2,7 +2,6 @@ import React from "react";
 import axios from "axios";
 import _ from "lodash";
 import { Mutation } from "@apollo/react-components";
-import serverUrl from "../../serverUrl";
 import {
   schema_createItem,
   schema_updateItem,
