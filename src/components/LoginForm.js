@@ -61,43 +61,52 @@ class LoginForm extends React.Component {
     const { formValue, formError } = this.state;
     return (
       <Mutation mutation={schema_login}>
-        {(login, { loading, error }) => (
-          <div>
-            <Form
-              ref={(ref) => (this.form = ref)}
-              onChange={(formValue) => {
-                this.setState({ formValue });
-              }}
-              formValue={formValue}
-              onCheck={(formError) => {
-                this.setState({ formError });
-              }}
-              model={model}
-              onSubmit={() => this.handleSubmit(login, formError)}
-              className="login__form"
-            >
-              <TextField name="employeeId" label="Employee ID" />
-              <TextField name="password" label="Password" type="password" />
-              <ButtonToolbar className="login__panel__btn">
-                <Button appearance="primary" type="submit">
-                  Submit
-                </Button>
-              </ButtonToolbar>
-              <div>
-                {loading && (
-                  <Loader
-                    backdrop
-                    center
-                    size="md"
-                    content={`Logging in ...`}
-                    vertical
-                  />
-                )}
-                {error && Alert.error("Failed. Please try again.")}
-              </div>
-            </Form>
-          </div>
-        )}
+        {(login, { loading, error }) => {
+          if (loading) {
+            return (
+              <Loader
+                backdrop
+                center
+                size="md"
+                content={`Logging in ...`}
+                vertical
+              />
+            );
+          }
+          if (error) {
+            Alert.error("Failed. Please try again.");
+            if (process.env.NODE_ENV !== "development") {
+              setTimeout(() => {
+                window.location.assign(window.location.href);
+              }, 2000);
+            }
+          }
+          return (
+            <div>
+              <Form
+                ref={(ref) => (this.form = ref)}
+                onChange={(formValue) => {
+                  this.setState({ formValue });
+                }}
+                formValue={formValue}
+                onCheck={(formError) => {
+                  this.setState({ formError });
+                }}
+                model={model}
+                onSubmit={() => this.handleSubmit(login, formError)}
+                className="login__form"
+              >
+                <TextField name="employeeId" label="Employee ID" />
+                <TextField name="password" label="Password" type="password" />
+                <ButtonToolbar className="login__panel__btn">
+                  <Button appearance="primary" type="submit">
+                    Submit
+                  </Button>
+                </ButtonToolbar>
+              </Form>
+            </div>
+          );
+        }}
       </Mutation>
     );
   }
