@@ -69,15 +69,24 @@ class ChangePassword extends React.Component {
             verifyPassword: "",
           },
         });
-        Alert.success("Success");
+
       });
     }
   };
-
+  onCompleted = () => {
+    this.setState({
+      formValue: {
+        currentPassword: "",
+        password: "",
+        verifyPassword: "",
+      },
+    });
+    Alert.success("Success.")
+  }
   render() {
     const { formValue } = this.state;
     return (
-      <Mutation mutation={schema_changePassword} onCompleted={() => Alert.success("Success.")}>
+      <Mutation mutation={schema_changePassword} onCompleted={this.onCompleted}>
         {(changePassword, { loading, error }) => (
           <div>
             <Form
