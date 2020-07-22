@@ -139,7 +139,6 @@ class StaffFormModal extends React.Component {
                         formValue={formValue}
                         model={model}
                         onCheck={formError => {
-                          console.log(formError, 'formError');
                           this.setState({ formError });
                         }}
                       >

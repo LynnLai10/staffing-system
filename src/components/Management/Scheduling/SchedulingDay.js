@@ -31,8 +31,6 @@ class SchedulingDay extends React.Component {
     this.isDefault = this.props.isDefault;
   }
   componentDidMount() {
-    console.log(this.props.data.schedule_staffs);
-    console.log(this.props.staffList);
     const staffList = this.props.staffList.tallyClerk.concat(
       this.props.staffList.casher
     );
@@ -53,9 +51,9 @@ class SchedulingDay extends React.Component {
       {
         staffs,
         staffList: {
-          casher: this.props.staffList.casher,
+          casher: this.props.staffList.casher.filter(item => item.availability !== "no"),
           tallyClerk: {
-            all: this.props.staffList.tallyClerk,
+            all: this.props.staffList.tallyClerk.filter(item => item.availability !== "no"),
             full: this.props.staffList.tallyClerk.filter(
               (item) => item.availability === "full"
             ),
@@ -97,7 +95,6 @@ class SchedulingDay extends React.Component {
     const staffs = this.state.staffs.map((item, index) =>
       index === staffIndex ? data : item
     );
-    console.log(staffs);
     this.setState(
       {
         staffs,

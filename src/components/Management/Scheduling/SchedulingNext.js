@@ -151,8 +151,6 @@ class SchedulingNext extends React.Component {
                                       defaultSchedule,
                                       nextSchedule
                                     );
-                                    // console.log(nextSchedule);
-                                    console.log(schedule);
                                     return (
                                       <div>
                                         <SchedulingForm

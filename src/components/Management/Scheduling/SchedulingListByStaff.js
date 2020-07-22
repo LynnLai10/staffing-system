@@ -86,7 +86,6 @@ class SchedulingListByStaff extends React.Component {
           }
 
           const schduleByStaff = this.filterdata(data.users);
-          console.log(schduleByStaff);
           return <div>
             <SchedulingListByStaffPosition data={schduleByStaff.tallyClerk} dates={dates} isTallyClerk />
             <SchedulingListByStaffPosition data={schduleByStaff.casher} dates={dates} isTallyClerk={false} />

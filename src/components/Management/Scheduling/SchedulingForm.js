@@ -15,52 +15,51 @@ class SchedulingForm extends React.Component {
       : this.props.dates.schedule_No;
   }
 
-  filterNextFreetime = (freetimes) => {
+  filterNextFreetime = (freetimes, defaultStaffList) => {
+    //initialization for each day
     const staffList_days = [];
     for (let i = 0; i < 14; i++) {
-      const staffList_day = freetimes.filter(
-        (item) => item.schedule_day.day_No.split("_")[1] === i.toString()
-      );
-      const tallyClerk = [];
-      const casher = [];
-      for (let j = 0; j < staffList_day.length; j++) {
-        const { staff, availability } = staffList_day[j];
-        const template = {
-          value: staff.employeeId,
-          label: staff.name,
-          availability,
-        };
-        if (staff.sex === "Male") {
-          tallyClerk.push(template);
-        } else {
-          casher.push(template);
-        }
-      }
       staffList_days.push({
         day_No: `${this.schedule_No}_${i}`,
         staffList: {
-          tallyClerk,
-          casher,
+          ...defaultStaffList
         },
       });
     }
-    return staffList_days;
+    //push data base on day_No
+    for (let i = 0; i < freetimes.length; i++) {
+      const dayIndex = freetimes[i].schedule_day.day_No.split("_")[1];
+      const { staff, availability } = freetimes[i];
+      const template = {
+        value: staff.employeeId,
+        label: staff.name,
+        availability,
+      };
+      if (staff.sex === "Male") {
+        const tallyClerk = staffList_days[dayIndex].staffList.tallyClerk.map(item => item.value === template.value? template : item)
+        staffList_days[dayIndex].staffList.tallyClerk = tallyClerk
+      } else {
+        const casher = staffList_days[dayIndex].staffList.casher.map(item => item.value === template.value? template : item)
+        staffList_days[dayIndex].staffList.casher = casher
+      }
+    }
+    return staffList_days
   };
 
   filterDefaultFreetime = (staffs) => {
-    const tallyClerk = staffs.filter(item => item.sex === "Male")
-    const casher = staffs.filter(item => item.sex !== "Male")
+    const tallyClerk = staffs.filter((item) => item.sex === "Male");
+    const casher = staffs.filter((item) => item.sex !== "Male");
     const template = (staff) => ({
       value: staff.employeeId,
       label: staff.name,
       availability: "full",
     });
     return {
-      tallyClerk: tallyClerk.map(item => template(item)),
-      casher: casher.map(item => template(item))
-    }
-  }
-  renderNextSchedule = (Data, dates) => {
+      tallyClerk: tallyClerk.map((item) => template(item)),
+      casher: casher.map((item) => template(item)),
+    };
+  };
+  renderNextSchedule = (Data, dates, defaultStaffList) => {
     return (
       <Query
         query={schema_fetchFreetimes}
@@ -81,7 +80,10 @@ class SchedulingForm extends React.Component {
           if (error) {
             return Alert.error("Failed. Please try again.");
           }
-          const staffList = this.filterNextFreetime(data.freetimes);
+          const staffList = this.filterNextFreetime(
+            data.freetimes,
+            defaultStaffList
+          );
           return (
             <div className="freetimeForm__panelItem">
               {dates.map((item, index) => (
@@ -99,41 +101,20 @@ class SchedulingForm extends React.Component {
       </Query>
     );
   };
-  renderDefaultSchedule = (Data, days) => {
+  renderDefaultSchedule = (Data, days, staffList) => {
     return (
-      <Query query={schema_staffList}>
-        {({ loading, error, data }) => {
-          if (loading) {
-            return (
-              <Loader
-                backdrop
-                center
-                size="md"
-                content={`Loading...`}
-                vertical
-              />
-            );
-          }
-          if (error) {
-            return Alert.error("Failed. Please try again.");
-          }
-          const staffList = this.filterDefaultFreetime(data.users)
-          return (
-            <div className="freetimeForm__panelItem">
-              {days.map((item, index) => (
-                <SchedulingDrawer
-                  isDefault
-                  key={index}
-                  index={index}
-                  dates={this.props.dates}
-                  data={Data[index]}
-                  staffList={staffList}
-                />
-              ))}
-            </div>
-          );
-        }}
-      </Query>
+      <div className="freetimeForm__panelItem">
+        {days.map((item, index) => (
+          <SchedulingDrawer
+            isDefault
+            key={index}
+            index={index}
+            dates={this.props.dates}
+            data={Data[index]}
+            staffList={staffList}
+          />
+        ))}
+      </div>
     );
   };
 
@@ -159,9 +140,33 @@ class SchedulingForm extends React.Component {
                 <h5 key={item}>{item}</h5>
               ))}
             </div>
-            {!isDefault
-              ? this.renderNextSchedule(Data, dates)
-              : this.renderDefaultSchedule(Data, days)}
+            <Query query={schema_staffList}>
+              {({ loading, error, data }) => {
+                if (loading) {
+                  return (
+                    <Loader
+                      backdrop
+                      center
+                      size="md"
+                      content={`Loading...`}
+                      vertical
+                    />
+                  );
+                }
+                if (error) {
+                  return Alert.error("Failed. Please try again.");
+                }
+                const staffList = this.filterDefaultFreetime(data.users);
+                return (
+                  <div>
+                    {!isDefault
+                      ? this.renderNextSchedule(Data, dates, staffList)
+                      : this.renderDefaultSchedule(Data, days, staffList)}
+                  </div>
+                );
+              }}
+            </Query>
+
             <ButtonToolbar className="freetimeForm__footer">
               <SchedulingReset
                 isDefault={isDefault}
